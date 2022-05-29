@@ -17,4 +17,3 @@ const DarkTheme: React.FC = () => {
 };
 
 export default DarkTheme;
-

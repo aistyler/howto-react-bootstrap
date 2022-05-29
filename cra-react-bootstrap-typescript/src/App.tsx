@@ -1,10 +1,12 @@
 import React from 'react';
 import './App.css';
 import { Button, Container, Row, Col, Card, Dropdown } from 'react-bootstrap';
-import { useTheme } from './themes/ThemeContextUsingLazy';
+//import { useTheme } from './themes/ThemeContextUsingLazy';
+import { useTheme } from './themes/ThemeContext';
 
 function App() {
   const { theme, setTheme } = useTheme();
+  //console.log('>>> getComputedStyle(document.documentElement).getPropertyValue(''))
 
   function onClickLightTheme() {
     setTheme('light');
@@ -49,7 +51,7 @@ function App() {
 
         <Row>
           <Col sm="3">
-            <p>Dropdown</p>
+            <p>List Group</p>
           </Col>
           <Col>
             <ol className="list-group list-group-numbered">

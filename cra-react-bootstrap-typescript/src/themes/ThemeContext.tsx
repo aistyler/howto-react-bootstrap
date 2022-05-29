@@ -6,9 +6,9 @@ import React, {
 } from 'react'
 import { useMediaQuery } from './useMediaQuery';
 //
-// import default theme css
+// import light theme css
 //
-import '../styles/default.theme.css';
+import '../styles/light.theme.css';
 
 //
 // color theme and colors
