@@ -8,9 +8,9 @@ import React, {
 // color theme and colors
 //
 import ColorTheme from './ColorTheme';
-import { rootCssColors as defaultRootCssColors } from './colors/DefaultTheme';
-import { rootCssColors as darkRootCssColors } from './colors/DarkTheme';
-import { rootCssColors as lightRootCssColors } from './colors/LightTheme';
+import { rootCssColors as defaultRootCssColors } from './colors/default-theme';
+import { rootCssColors as darkRootCssColors } from './colors/dark-theme';
+import { rootCssColors as lightRootCssColors } from './colors/light-theme';
 
 import './bootstrap.theme.css';
 
