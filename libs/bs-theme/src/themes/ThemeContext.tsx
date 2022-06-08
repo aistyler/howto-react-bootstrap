@@ -8,7 +8,6 @@ import React, {
 //
 // color theme and colors
 //
-import ColorTheme from './ColorTheme';
 import { rootCssColors as defaultRootCssColors } from './colors/default-theme';
 import { rootCssColors as darkRootCssColors } from './colors/dark-theme';
 import { rootCssColors as lightRootCssColors } from './colors/light-theme';
@@ -26,8 +25,6 @@ const THEME_STORAGE_KEY = 'theme';
 const colorThemes = ['system', 'light', 'dark'] as const;
 
 export type ColorThemeName = typeof colorThemes[number];
-// with internal themes
-export type ColorThemeNameAll = ColorThemeName | 'system:light' | 'system:dark';
 
 const defaultColorTheme = 'system' as ColorThemeName;
 
@@ -35,7 +32,7 @@ const defaultColorTheme = 'system' as ColorThemeName;
 // types
 //
 export type UseThemeProps = {
-  theme: ColorThemeNameAll;
+  theme: ColorThemeName;
   setTheme: (theme: ColorThemeName) => void;
 };
 
@@ -72,10 +69,19 @@ export const useTheme = () => useContext(ThemeContext) ?? defaultContext
 const MEDIA_color = '(prefers-color-scheme: dark)';
 
 //
+// set ':root' css props
+//
+function _setRootCss(rootCss: string) {
+  const rootStyle = document.styleSheets[0];
+  if (rootStyle.cssRules.length > 0) for (let i = rootStyle.cssRules.length -1; i >= 0; i--) rootStyle.deleteRule(i);
+  rootStyle.insertRule(rootCss);
+}
+
+//
 // ThemeProvider
 //
 export const ThemeProvider = ({ children }: { children?: React.ReactNode; }) => {
-  const [theme, setThemeState] = useState<ColorThemeNameAll>(_getTheme);
+  const [theme, setThemeState] = useState<ColorThemeName>(_getTheme);
   const isSystemDark = useMediaQuery(MEDIA_color);
 
   const setTheme =(_theme: ColorThemeName) => {
@@ -84,24 +90,22 @@ export const ThemeProvider = ({ children }: { children?: React.ReactNode; }) => 
   };
 
   useEffect(() => {
-    if (theme.startsWith('system')) {
-      if (isSystemDark) setThemeState('system:dark');
-      else setThemeState('system:light');
+    let _theme = theme;
+    if (theme === 'system') {
+      if (isSystemDark) _theme = 'dark';
+      else _theme = 'light';
     }
-  }, [theme, isSystemDark])
+    // set root css rules
+    if (_theme === 'dark') _setRootCss(darkRootCssColors);
+    else if (_theme === 'light') _setRootCss(lightRootCssColors);
+    else _setRootCss(defaultRootCssColors);
+  }, [theme, isSystemDark]);
 
   return (
     <ThemeContext.Provider value={{
       theme,
       setTheme,
     }} >
-      <ColorTheme 
-        rootCssColors={
-          theme.endsWith('dark') ? darkRootCssColors
-          : theme.endsWith('light') ? lightRootCssColors
-          : defaultRootCssColors
-        }
-       />
       {children}
     </ThemeContext.Provider>
   );
