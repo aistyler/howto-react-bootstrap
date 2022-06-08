@@ -25,7 +25,7 @@ export function App() {
               <ButtonGroup>
                 <ToggleButton type='radio' value='light' checked={theme === 'light'} onClick={onClickLightTheme} variant="outline-success">Light</ToggleButton>
                 <ToggleButton type='radio' value='dark' checked={theme === 'dark'} onClick={onClickDarkTheme} variant="outline-success">Dark</ToggleButton>
-                <ToggleButton type='radio' value='system' checked={theme === 'system'} onClick={onClickDefaultTheme} variant="outline-success">Default</ToggleButton>
+                <ToggleButton type='radio' value='system' checked={theme.startsWith('system')} onClick={onClickDefaultTheme} variant="outline-success">Default</ToggleButton>
               </ButtonGroup>
           </Container>
         </Navbar>

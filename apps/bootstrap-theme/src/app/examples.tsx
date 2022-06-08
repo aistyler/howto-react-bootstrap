@@ -73,7 +73,7 @@ export const Examples = [
           <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Default switch checkbox input</label>
         </div>
         <div className="form-check form-switch">
-          <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked />
+          <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked />
           <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Checked switch checkbox input</label>
         </div>
         <div className="form-check form-switch">
@@ -81,7 +81,7 @@ export const Examples = [
           <label className="form-check-label" htmlFor="flexSwitchCheckDisabled">Disabled switch checkbox input</label>
         </div>
         <div className="form-check form-switch">
-          <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckCheckedDisabled" defaultChecked disabled />
+          <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckCheckedDisabled" checked disabled />
           <label className="form-check-label" htmlFor="flexSwitchCheckCheckedDisabled">Disabled checked switch checkbox input</label>
         </div>
       </div>
@@ -99,7 +99,7 @@ export const Examples = [
           </label>
         </div>
         <div className="form-check">
-          <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" defaultChecked />
+          <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked />
           <label className="form-check-label" htmlFor="flexRadioDefault2">
             Default checked radio
           </label>
@@ -111,7 +111,7 @@ export const Examples = [
           </label>
         </div>
         <div className="form-check">
-          <input className="form-check-input" type="radio" name="flexRadioDisabled" id="flexRadioCheckedDisabled" defaultChecked disabled />
+          <input className="form-check-input" type="radio" name="flexRadioDisabled" id="flexRadioCheckedDisabled" checked disabled />
           <label className="form-check-label" htmlFor="flexRadioCheckedDisabled">
             Disabled checked radio
           </label>
