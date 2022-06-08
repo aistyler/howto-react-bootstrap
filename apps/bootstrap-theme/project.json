@@ -1,0 +1,83 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/bootstrap-theme/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/bootstrap-theme",
+        "index": "apps/bootstrap-theme/src/index.html",
+        "baseHref": "/",
+        "main": "apps/bootstrap-theme/src/main.tsx",
+        "polyfills": "apps/bootstrap-theme/src/polyfills.ts",
+        "tsConfig": "apps/bootstrap-theme/tsconfig.app.json",
+        "assets": [
+          "apps/bootstrap-theme/src/favicon.ico",
+          "apps/bootstrap-theme/src/assets"
+        ],
+        "styles": ["apps/bootstrap-theme/src/styles.css"],
+        "scripts": [],
+        "webpackConfig": "@nrwl/react/plugins/webpack"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/bootstrap-theme/src/environments/environment.ts",
+              "with": "apps/bootstrap-theme/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/web:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "bootstrap-theme:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "bootstrap-theme:build:development"
+        },
+        "production": {
+          "buildTarget": "bootstrap-theme:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/bootstrap-theme/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/bootstrap-theme"],
+      "options": {
+        "jestConfig": "apps/bootstrap-theme/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

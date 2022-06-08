@@ -1,29 +1,21 @@
 # HowTo react bootstrap
 
-## [Create a JavaScript project using create-react-app](./cra-react-bootstrap/)
+## Initialization
 
 ```sh
-# create a react app
-yarn create react-app ${APP-NAME}
-cd ${APP-NAME}
-# install dependency packages
-yarn add react-bootstrap bootstrap 
-# install additional packages
-yarn add -D sass
-```
+yarn create nx-workspace howto-react-bootstrap \
+  nxCloud=false \
+  packageManager=yarn \
+  preset=ts
 
-update sass options. (See ./cra-react-bootstrap)
+# add plugins
+yarn add -D @nrwl/react
 
-## [Create a TypeScript project using create-react-app](./cra-react-bootstrap-typescript/)
+# create react apps
+nx generate @nrwl/react:application react-bootstrap --e2eTestRunner=none --style=css --no-interactive --dry-run
+nx generate @nrwl/react:application bootstrap-theme --e2eTestRunner=none --style=css --no-interactive --dry-run
 
-```sh
-# create a react app
-yarn create react-app ${APP-NAME} --template typescript
-cd ${APP-NAME}
-# install dependency packages
-yarn add react-bootstrap bootstrap
-yarn add -D typescript @types/node @types/react @types/react-dom @types/jest
-# install additional packages
-yarn add bootstrap-icons
-yarn add -D sass
+# install dependencies
+yarn add bootstrap react-bootstrap
+
 ```
