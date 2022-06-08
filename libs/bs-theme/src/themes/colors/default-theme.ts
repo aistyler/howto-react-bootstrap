@@ -70,4 +70,6 @@ export const rootCssColors = `:root {
   --bs-link-hover-color: #0a58ca;
   --bs-code-color: #d63384;
   --bs-highlight-bg: #fff3cd;
+  --bs-disabled-bg: #e9ecef;
+  --bs-disabled-fg: #212529;
 }`;

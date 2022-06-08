@@ -13,6 +13,7 @@ export const rootCssColors = `:root {
   --bs-green: #3fb618;
   --bs-teal: #20c997;
   --bs-cyan: #9954bb;
+  --bs-black: #000;
   --bs-white: #fff;
   --bs-gray: #868e96;
   --bs-gray-dark: #373a3c;
@@ -54,4 +55,19 @@ export const rootCssColors = `:root {
   --bs-body-line-height: 1.5;
   --bs-body-color: #373a3c;
   --bs-body-bg: #fff;
+  --bs-border-width: 1px;
+  --bs-border-style: solid;
+  --bs-border-color: #dee2e6;
+  --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
+  --bs-border-radius: 0.375rem;
+  --bs-border-radius-sm: 0.25rem;
+  --bs-border-radius-lg: 0.5rem;
+  --bs-border-radius-xl: 1rem;
+  --bs-border-radius-2xl: 2rem;
+  --bs-border-radius-pill: 50rem;
+  --bs-heading-color: ;
+  --bs-link-color: #0d6efd;
+  --bs-link-hover-color: #0a58ca;
+  --bs-code-color: #d63384;
+  --bs-highlight-bg: #fff3cd;
 }`;

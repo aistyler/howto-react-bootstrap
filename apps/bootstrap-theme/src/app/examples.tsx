@@ -46,7 +46,7 @@ export const Examples = [
         </div>
         <div className="input-group">
           <span className="input-group-text">With textarea</span>
-          <textarea className="form-control" aria-label="With textarea" value={""} />
+          <textarea className="form-control" aria-label="With textarea" />
         </div>
       </div>
     ),
