@@ -53,7 +53,7 @@ export const rootCssColors = `:root {
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
-  --bs-body-color: #fff;
+  --bs-body-color: #ebebeb;
   --bs-body-bg: #222;
   --bs-border-width: 1px;
   --bs-border-style: solid;
