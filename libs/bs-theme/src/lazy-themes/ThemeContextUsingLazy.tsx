@@ -5,18 +5,6 @@ import React, {
   useState,
 } from 'react'
 import { useMediaQuery } from './useMediaQuery';
-//
-// import light theme css
-//
-import '../styles/light.theme.css';
-
-//
-// color theme and colors
-//
-import ColorTheme from './ColorTheme';
-import { rootColors as defaultRootColors } from './colors/DefaultTheme';
-import { rootColors as darkRootColors } from './colors/DarkTheme';
-import { rootColors as lightRootColors } from './colors/LightTheme';
 
 //
 // configuration
@@ -33,6 +21,13 @@ export type UseThemeProps = {
   theme: ColorThemeName;
   setTheme: (theme: ColorThemeName) => void;
 };
+
+//
+// lazy themes
+//
+const DefaultTheme = React.lazy(() => import('./DefaultTheme'));
+const DarkTheme = React.lazy(() => import('./DarkTheme'));
+const LightTheme = React.lazy(() => import('./LightTheme'));
 
 //
 // storage helpers
@@ -89,11 +84,12 @@ export const ThemeProvider = ({ children }: { children?: React.ReactNode; }) => 
       theme,
       setTheme,
     }} >
-      <ColorTheme rootColors={
-        theme === 'dark' ? darkRootColors
-        : theme === 'light' ? lightRootColors
-        : defaultRootColors
-      } />
+      {/* Conditionally render theme */}
+      <React.Suspense fallback={null}>
+        {theme === 'dark' && <DarkTheme />}
+        {theme === 'light' && <LightTheme />}
+        {theme === 'system' && <DefaultTheme />}
+      </React.Suspense>
       {children}
     </ThemeContext.Provider>
   );

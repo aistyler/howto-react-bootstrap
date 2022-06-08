@@ -2,7 +2,9 @@
   "name": "howto-react-bootstrap",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dev": "nx serve bootstrap-theme"
+  },
   "private": true,
   "dependencies": {
     "bootstrap": "^5.1.3",

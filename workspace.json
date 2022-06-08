@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "bootstrap-theme": "apps/bootstrap-theme",
+    "bs-theme": "libs/bs-theme",
     "react-bootstrap": "apps/react-bootstrap"
   }
 }

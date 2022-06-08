@@ -15,6 +15,9 @@ yarn add -D @nrwl/react
 nx generate @nrwl/react:application react-bootstrap --e2eTestRunner=none --style=css --no-interactive --dry-run
 nx generate @nrwl/react:application bootstrap-theme --e2eTestRunner=none --style=css --no-interactive --dry-run
 
+# create react libraries
+nx generate @nrwl/react:library bs-theme --e2eTestRunner=none --style=css --no-interactive --dry-run
+
 # install dependencies
 yarn add bootstrap react-bootstrap
 
