@@ -4,9 +4,10 @@
 
 ```sh
 yarn create nx-workspace howto-react-bootstrap \
-  nxCloud=false \
-  packageManager=yarn \
-  preset=ts
+  --appName=react-bs \
+  --nxCloud=false \
+  --packageManager=yarn \
+  --preset=ts
 
 # add plugins
 yarn add -D @nrwl/react
