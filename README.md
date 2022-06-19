@@ -18,6 +18,7 @@ nx generate @nrwl/react:application bootstrap-theme --e2eTestRunner=none --style
 
 # create react libraries
 nx generate @nrwl/react:library bs-theme --e2eTestRunner=none --style=css --no-interactive --dry-run
+nx generate @nrwl/react:library bs-components --e2eTestRunner=none --style=css --no-interactive --dry-run
 
 # install dependencies
 yarn add bootstrap react-bootstrap

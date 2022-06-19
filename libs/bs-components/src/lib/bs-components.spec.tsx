@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import App from './app';
+import BsComponents from './bs-components';
 
-describe('App', () => {
+describe('BsComponents', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<App />);
+    const { baseElement } = render(<BsComponents />);
     expect(baseElement).toBeTruthy();
   });
 });

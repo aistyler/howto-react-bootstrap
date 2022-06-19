@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@howto/bs-components": ["libs/bs-components/src/index.ts"],
       "@howto/bs-theme": ["libs/bs-theme/src/index.ts"]
     }
   },
