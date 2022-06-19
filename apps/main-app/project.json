@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/react-bootstrap/src",
+  "sourceRoot": "apps/main-app/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -9,17 +9,14 @@
       "defaultConfiguration": "production",
       "options": {
         "compiler": "babel",
-        "outputPath": "dist/apps/react-bootstrap",
-        "index": "apps/react-bootstrap/src/index.html",
+        "outputPath": "dist/apps/main-app",
+        "index": "apps/main-app/src/index.html",
         "baseHref": "/",
-        "main": "apps/react-bootstrap/src/main.tsx",
-        "polyfills": "apps/react-bootstrap/src/polyfills.ts",
-        "tsConfig": "apps/react-bootstrap/tsconfig.app.json",
-        "assets": [
-          "apps/react-bootstrap/src/favicon.ico",
-          "apps/react-bootstrap/src/assets"
-        ],
-        "styles": ["apps/react-bootstrap/src/styles.css"],
+        "main": "apps/main-app/src/main.tsx",
+        "polyfills": "apps/main-app/src/polyfills.ts",
+        "tsConfig": "apps/main-app/tsconfig.app.json",
+        "assets": ["apps/main-app/src/favicon.ico", "apps/main-app/src/assets"],
+        "styles": ["apps/main-app/src/styles.css"],
         "scripts": [],
         "webpackConfig": "@nrwl/react/plugins/webpack"
       },
@@ -33,8 +30,8 @@
         "production": {
           "fileReplacements": [
             {
-              "replace": "apps/react-bootstrap/src/environments/environment.ts",
-              "with": "apps/react-bootstrap/src/environments/environment.prod.ts"
+              "replace": "apps/main-app/src/environments/environment.ts",
+              "with": "apps/main-app/src/environments/environment.prod.ts"
             }
           ],
           "optimization": true,
@@ -50,15 +47,15 @@
       "executor": "@nrwl/web:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "react-bootstrap:build",
+        "buildTarget": "main-app:build",
         "hmr": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "react-bootstrap:build:development"
+          "buildTarget": "main-app:build:development"
         },
         "production": {
-          "buildTarget": "react-bootstrap:build:production",
+          "buildTarget": "main-app:build:production",
           "hmr": false
         }
       }
@@ -67,14 +64,14 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/react-bootstrap/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["apps/main-app/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/react-bootstrap"],
+      "outputs": ["coverage/apps/main-app"],
       "options": {
-        "jestConfig": "apps/react-bootstrap/jest.config.ts",
+        "jestConfig": "apps/main-app/jest.config.ts",
         "passWithNoTests": true
       }
     }
