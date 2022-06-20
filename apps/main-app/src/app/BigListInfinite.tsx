@@ -1,4 +1,7 @@
-import React, { ComponentProps, ComponentType, memo, useEffect, useRef } from 'react';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import React, { 
+  ComponentProps, ComponentType,ForwardedRef,memo, useEffect, useRef 
+} from 'react';
 import { areEqual, FixedSizeList as List } from 'react-window';
 import type { ListChildComponentProps } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
@@ -21,7 +24,22 @@ const memonizedRow = (row: any) => memo(
   areEqual
 );
 
-const _BigList: React.ForwardRefRenderFunction<any, BigListInfiniteProps<any>> = ({
+const useForwardedRef = <T,>(ref: ForwardedRef<T>) => {
+  const innerRef = useRef<T>(null);
+
+  useEffect(() => {
+    if (!ref) return;
+    if (typeof ref === 'function') {
+      ref(innerRef.current);
+    } else {
+      ref.current = innerRef.current;
+    }
+  });
+
+  return innerRef;
+}
+
+const _BigListInfinite: React.ForwardRefRenderFunction<any, BigListInfiniteProps<any>> = ({
   isItemLoaded,
   loadMoreItems,
   threshold,
@@ -31,36 +49,45 @@ const _BigList: React.ForwardRefRenderFunction<any, BigListInfiniteProps<any>> =
   itemCount,
   ...props
 }, ref) => {
-  const row = useRef(children);
+  const rowMemonized = useRef(children);
+
+  // memonize
   useEffect(() => {
     if (memonized)
-      row.current = memonizedRow(children);
+      rowMemonized.current = memonizedRow(children);
   }, [memonized, children]);
 
   return (
-    <InfiniteLoader
-      ref={ref}
-      isItemLoaded={isItemLoaded}
-      itemCount={itemCount}
-      loadMoreItems={loadMoreItems}
-    >
-      {({ onItemsRendered, ref }) => (
-        <AutoSize>
-          {({ height, width }) => (
-            <List ref={ref} 
-              itemCount={itemCount} 
-              onItemsRendered={onItemsRendered}
-              width={width}
-              height={height}
-              {...props}
-            >
-              {row.current}
-            </List>
-          )}
-        </AutoSize>
+    <AutoSize>
+    {({ height, width }) => ( 
+      <InfiniteLoader
+        isItemLoaded={isItemLoaded}
+        itemCount={itemCount}
+        loadMoreItems={loadMoreItems}
+      >
+      {({ onItemsRendered, ref: setRef }) => (
+        <List 
+          ref={(node) => { 
+            if (node) {
+              setRef(node);
+              if(typeof ref === 'function') ref(node);
+              else if (ref) ref.current = node;
+              console.log('>>>>>BigListInfinite: setref', typeof ref);
+            }
+          }}
+          itemCount={itemCount} 
+          onItemsRendered={onItemsRendered}
+          width={width}
+          height={height}
+          {...props}
+        >
+          {rowMemonized.current}
+        </List>
       )}
-    </InfiniteLoader>
+      </InfiniteLoader>
+    )}
+    </AutoSize>
   );
 }
 
-export const BigListInfinite = React.forwardRef(_BigList);
+export const BigListInfinite = React.forwardRef(_BigListInfinite);

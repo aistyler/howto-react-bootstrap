@@ -1,8 +1,8 @@
 import React from 'react';
 import {
-  BigListInfinite
-} from './BigListInfinite';
-import { ListChildComponentProps } from 'react-window';
+  BigListScroller
+} from './BigListScroller';
+import type { ListChildComponentProps } from 'react-window';
 import styles from './app.module.css';
 
 type Item = {
@@ -26,46 +26,47 @@ function loadItems(page: number, pageSize: number): Promise<Item[]> {
 }
 
 const pageSize = 30;
+const rowItemHeight = 35;
 
-export function InfiniteAutoSizeExample() {
+export function InfiniteScrollerExample() {
   const [loading, setLoading] = React.useState(false);
-  const [ itemCount, setItemCount ] = React.useState(1);
+  const [itemCount, setItemCount] = React.useState(1);
   const items = React.useRef([] as Item[]);
   const listRef = React.useRef<any>();
 
-  const itemSize = items.current.length;
+  const itemsLen = items.current.length;
   React.useEffect(() => {
     const countReq = getItemCount();
     countReq.then((res) => {
-      setItemCount(Math.min(itemSize + pageSize, res));
+      setItemCount(Math.min(itemsLen + pageSize, res));
     });
-  }, [itemSize]);
+  }, [itemsLen]);
+  const listHeight = itemCount * rowItemHeight + 100 ;
 
-  console.log('>>> item count:', itemCount, ', is loading:', loading, listRef.current);
+  console.log('>>> item count:', itemCount, ', is loading:', loading, listHeight);
   return (
-    <div className={`container-fluid d-flex flex-column h-100`}>
-      
-      <div className={'row'}>
-        <div className={'col'}><p> Vertical: </p></div>
+    <div className={`container-fluid`}>
+      <div className={`row`}>
+        <p>Vertical:</p>
         <button onClick={() => listRef.current.scrollToItem(50)}>scroll to</button>
       </div>
-
-      <div className={'row flex-grow-1'}>
-        <div className={'col'}>
-          <BigListInfinite
+      <div className={`row`} style={{height: listHeight, overflow: 'hidden'}}>
+        <div className={`col`} style={{overflow: 'hidden'}}>
+          <BigListScroller
             className={styles['list']}
             ref={listRef}
-            itemSize={35}
+            itemSize={rowItemHeight}
             isItemLoaded={isItemLoaded}
             loadMoreItems={loadMoreItems}
             itemCount={itemCount}
+            height={listHeight}
             memonized
+            threshold={itemCount}
           >
             {renderRow}
-          </BigListInfinite>
+          </BigListScroller>
         </div>
       </div>
-      
     </div>
   );
 
@@ -99,4 +100,4 @@ export function InfiniteAutoSizeExample() {
   }
 }
 
-export default InfiniteAutoSizeExample;
+export default InfiniteScrollerExample;
