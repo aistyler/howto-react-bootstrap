@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Container, Row, Col,ToggleButton, ButtonGroup, Navbar } from 'react-bootstrap';
 import { useTheme } from '@howto/bs-theme';
 import { Examples } from './examples';

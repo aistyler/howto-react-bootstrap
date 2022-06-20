@@ -1,20 +1,34 @@
-import React, { ComponentProps, ComponentType, LegacyRef } from 'react';
-import { FixedSizeList as List } from 'react-window';
+import React, { ComponentProps, ComponentType, memo, useEffect, useRef } from 'react';
+import { areEqual, FixedSizeList as List } from 'react-window';
 import type { ListChildComponentProps } from 'react-window';
  
 interface BigListProps<T> extends ComponentProps<typeof List<T>> {
-  type?: string;
+  memonized?: boolean;
 }
 
 export type RenderRow<T> = ComponentType<ListChildComponentProps<T>>;
 
+const memonizedRow = (row: any) => memo(
+  (props) => row(props),
+  areEqual
+);
+
 const _BigList: React.ForwardRefRenderFunction<any, BigListProps<any>> = ({
   children,
+  memonized,
   ...props
-}, ref) => (
-  <List ref={ref} {...props}>
-    {children}
-  </List>
-);
+}, ref) => {
+  const row = useRef(children);
+  useEffect(() => {
+    if (memonized)
+      row.current = memonizedRow(children);
+  }, [memonized, children]);
+
+  return (
+    <List ref={ref} {...props}>
+      {row.current}
+    </List>
+  );
+}
 
 export const BigList = React.forwardRef(_BigList);

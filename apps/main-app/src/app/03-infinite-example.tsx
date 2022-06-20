@@ -3,7 +3,6 @@ import {
   BigListInfinite
 } from './BigListInfinite';
 import { ListChildComponentProps } from 'react-window';
-import styles from './app.module.css';
 
 type Item = {
   id: number;
@@ -43,29 +42,21 @@ export function App() {
 
   console.log('>>> item count:', itemCount, ', is loading:', loading);
   return (
-    <div className={`container vh-100`}>
-      
-      <div className={'row'}>
-        <div className={'col'}><p> Vertical: </p></div>
-      </div>
-
-      <div className={`row ${styles['list-wrapper']}`}>
-        <div className={'col'}>
-          <BigListInfinite
-            className={styles['list']}
-            ref={listRef}
-            itemSize={35}
-            isItemLoaded={isItemLoaded}
-            loadMoreItems={loadMoreItems}
-            itemCount={itemCount}
-            memonized
-          >
-            {renderRow}
-          </BigListInfinite>
-        </div>
-      </div>
-
-    </div>
+    <>
+      <p> Vertical: </p>
+      <BigListInfinite
+        ref={listRef}
+        height={150}
+        itemSize={35}
+        width={300}
+        isItemLoaded={isItemLoaded}
+        loadMoreItems={loadMoreItems}
+        itemCount={itemCount}
+        memonized
+      >
+        {renderRow}
+      </BigListInfinite>
+    </>
   );
 
   function isItemLoaded(index: number): boolean {

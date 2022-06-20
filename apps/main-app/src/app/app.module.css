@@ -1,1 +1,10 @@
 /* Your styles goes here. */
+
+.list {
+    border: 1px solid #d90000;
+}
+
+.list-wrapper {
+    height: 100%;
+    overflow: hidden;
+}

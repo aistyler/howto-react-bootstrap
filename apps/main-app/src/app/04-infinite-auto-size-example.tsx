@@ -43,13 +43,13 @@ export function App() {
 
   console.log('>>> item count:', itemCount, ', is loading:', loading);
   return (
-    <div className={`container vh-100`}>
+    <div className={`container d-flex flex-column h-100`}>
       
       <div className={'row'}>
         <div className={'col'}><p> Vertical: </p></div>
       </div>
 
-      <div className={`row ${styles['list-wrapper']}`}>
+      <div className={'row flex-grow-1'}>
         <div className={'col'}>
           <BigListInfinite
             className={styles['list']}
@@ -64,7 +64,7 @@ export function App() {
           </BigListInfinite>
         </div>
       </div>
-
+      
     </div>
   );
 
