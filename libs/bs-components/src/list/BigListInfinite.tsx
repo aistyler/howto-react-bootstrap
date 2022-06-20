@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { 
-  ComponentProps, ComponentType,ForwardedRef,memo, useEffect, useRef 
+  ComponentProps, ComponentType, memo, useEffect, useRef 
 } from 'react';
 import { areEqual, FixedSizeList as List } from 'react-window';
 import type { ListChildComponentProps } from 'react-window';
@@ -8,45 +8,27 @@ import InfiniteLoader from 'react-window-infinite-loader';
 import AutoSize from 'react-virtualized-auto-sizer';
 
 interface BigListInfiniteProps<T> extends Omit<ComponentProps<typeof List<T>>, 'width' | 'height'> {
+  memonized?: boolean;
   isItemLoaded: (index: number) => boolean;
   loadMoreItems: (startIndex: number, stopIndex: number) => Promise<void> | void;
   threshold?: number | undefined;
   minimumBatchSize?: number | undefined;
-  memonized?: boolean;
   width?: number;
   height?: number;
 }
-
-export type RenderRow<T> = ComponentType<ListChildComponentProps<T>>;
 
 const memonizedRow = (row: any) => memo(
   (props) => row(props),
   areEqual
 );
 
-const useForwardedRef = <T,>(ref: ForwardedRef<T>) => {
-  const innerRef = useRef<T>(null);
-
-  useEffect(() => {
-    if (!ref) return;
-    if (typeof ref === 'function') {
-      ref(innerRef.current);
-    } else {
-      ref.current = innerRef.current;
-    }
-  });
-
-  return innerRef;
-}
-
 const _BigListInfinite: React.ForwardRefRenderFunction<any, BigListInfiniteProps<any>> = ({
+  children,
+  memonized,
   isItemLoaded,
   loadMoreItems,
   threshold,
   minimumBatchSize,
-  memonized,
-  children,
-  itemCount,
   ...props
 }, ref) => {
   const rowMemonized = useRef(children);
@@ -62,8 +44,10 @@ const _BigListInfinite: React.ForwardRefRenderFunction<any, BigListInfiniteProps
     {({ height, width }) => ( 
       <InfiniteLoader
         isItemLoaded={isItemLoaded}
-        itemCount={itemCount}
+        itemCount={props.itemCount}
         loadMoreItems={loadMoreItems}
+        threshold={threshold}
+        minimumBatchSize={minimumBatchSize}
       >
       {({ onItemsRendered, ref: setRef }) => (
         <List 
@@ -75,7 +59,6 @@ const _BigListInfinite: React.ForwardRefRenderFunction<any, BigListInfiniteProps
               console.log('>>>>>BigListInfinite: setref', typeof ref);
             }
           }}
-          itemCount={itemCount} 
           onItemsRendered={onItemsRendered}
           width={width}
           height={height}

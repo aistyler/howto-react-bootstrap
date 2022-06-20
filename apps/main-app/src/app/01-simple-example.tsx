@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   BigList, RenderRow
-} from './BigList';
+} from '@howto/bs-components';
 
 const Row:RenderRow<any> = ({ index, style }) => (
   <div style={style}>Row {index}</div>
 );
 
-export default function SimpleExample() {
+export function SimpleExample() {
   const listRef = React.createRef<any>();
 
   return (
@@ -37,3 +37,5 @@ export default function SimpleExample() {
     </>
   );
 }
+
+export default SimpleExample;

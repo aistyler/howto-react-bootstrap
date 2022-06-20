@@ -1,1 +1,2 @@
-export * from './lib/bs-components';
+export * from './list/BigList';
+export * from './list/BigListInfinite';

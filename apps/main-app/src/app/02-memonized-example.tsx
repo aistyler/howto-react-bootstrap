@@ -2,7 +2,7 @@ import React from 'react';
 import memoizeOne from 'memoize-one';
 import {
   BigList, RenderRow
-} from './BigList';
+} from '@howto/bs-components';
 
 type Item = {
   id: number;

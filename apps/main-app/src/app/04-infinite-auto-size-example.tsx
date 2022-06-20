@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   BigListInfinite
-} from './BigListInfinite';
+} from '@howto/bs-components';
 import { ListChildComponentProps } from 'react-window';
 import styles from './app.module.css';
 
