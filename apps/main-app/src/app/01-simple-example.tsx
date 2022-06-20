@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  BigList, RenderRow
+  BigList, RenderRow, Scrollbar,
 } from '@howto/bs-components';
 
 const Row:RenderRow<any> = ({ index, style }) => (
@@ -20,6 +20,7 @@ export function SimpleExample() {
         itemSize={35}
         width={300}
         ref={listRef}
+        outerElementType={Scrollbar}
       >
         {Row}
       </BigList>
