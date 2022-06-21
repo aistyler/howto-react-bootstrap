@@ -6,6 +6,4 @@ export * from './lib/api-utils';
 export * from './lib/middlewares';
 export * from './lib/reducers';
 
-export {
-  baseApi as hydroApi,
-};
+export { baseApi as hydroApi };

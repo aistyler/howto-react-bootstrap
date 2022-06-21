@@ -124,15 +124,16 @@ export const uniPosts_onQueryStarted = async (
       // normalize data and save to store
       //cacheLifeCycle.updateCachedData(() =>
 
-        cacheLifeCycle.dispatch(
-          uniPostsActions.upsertManyWithMeta({
-            data: Array.isArray(data.data) ? data.data : [data.data],
-            ...(data.meta?.pagination ? data.meta.pagination : {}),
-        }))
-        
+      cacheLifeCycle.dispatch(
+        uniPostsActions.upsertManyWithMeta({
+          data: Array.isArray(data.data) ? data.data : [data.data],
+          ...(data.meta?.pagination ? data.meta.pagination : {}),
+        })
+      );
+
       //);
     }
-  
+
     // console.log(
     //   '[API]>>> fetched data:', Array.isArray(data.data) ? data.data.length : data.data
     // );
@@ -171,14 +172,12 @@ export const uniPosts_onCacheEntryAdded = async (
     if (isSuccess && data && data.data) {
       // normalize data and save to store
       //cacheLifeCycle.updateCachedData(() =>
-
-        // cacheLifeCycle.dispatch(
-        //   uniPostsActions.upsertManyWithMeta({
-        //     data: data.data,
-        //     ...(data.meta?.pagination ? data.meta.pagination : {}),
-        //   })
-        // )
-
+      // cacheLifeCycle.dispatch(
+      //   uniPostsActions.upsertManyWithMeta({
+      //     data: data.data,
+      //     ...(data.meta?.pagination ? data.meta.pagination : {}),
+      //   })
+      // )
       //);
     }
   } catch (_e) {

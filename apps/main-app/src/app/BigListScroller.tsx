@@ -1,16 +1,31 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { 
-  ComponentProps, ComponentType, ForwardedRef, LegacyRef, memo,useCallback,useEffect, useRef 
+import React, {
+  ComponentProps,
+  ComponentType,
+  ForwardedRef,
+  LegacyRef,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
 } from 'react';
-import { areEqual, FixedSizeList as List, ListOnScrollProps } from 'react-window';
+import {
+  areEqual,
+  FixedSizeList as List,
+  ListOnScrollProps,
+} from 'react-window';
 import type { ListChildComponentProps } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 import AutoSize from 'react-virtualized-auto-sizer';
 import throttle from 'lodash/throttle';
 
-interface BigListInfiniteProps<T> extends Omit<ComponentProps<typeof List<T>>, 'width' | 'height'> {
+interface BigListInfiniteProps
+  extends Omit<ComponentProps<typeof List>, 'width' | 'height'> {
   isItemLoaded: (index: number) => boolean;
-  loadMoreItems: (startIndex: number, stopIndex: number) => Promise<void> | void;
+  loadMoreItems: (
+    startIndex: number,
+    stopIndex: number
+  ) => Promise<void> | void;
   threshold?: number | undefined;
   minimumBatchSize?: number | undefined;
   memonized?: boolean;
@@ -22,10 +37,7 @@ interface BigListInfiniteProps<T> extends Omit<ComponentProps<typeof List<T>>, '
 
 export type RenderRow<T> = ComponentType<ListChildComponentProps<T>>;
 
-const memonizedRow = (row: any) => memo(
-  (props) => row(props),
-  areEqual
-);
+const memonizedRow = (row: any) => memo((props) => row(props), areEqual);
 
 const windowScrollPositionKey = {
   y: 'pageYOffset' as const,
@@ -37,12 +49,11 @@ const documentScrollPositionKey = {
   x: 'scrollLeft' as const,
 };
 
-const getScrollPosition = (axis: 'x' | 'y') => (
+const getScrollPosition = (axis: 'x' | 'y') =>
   window[windowScrollPositionKey[axis]] ||
   document.documentElement[documentScrollPositionKey[axis]] ||
   document.body[documentScrollPositionKey[axis]] ||
-  0
-);
+  0;
 
 const useForwardedRef = <T,>(ref: ForwardedRef<T>) => {
   const innerRef = useRef<T>(null);
@@ -57,20 +68,26 @@ const useForwardedRef = <T,>(ref: ForwardedRef<T>) => {
   });
 
   return innerRef;
-}
+};
 
-const _BigListScroller: React.ForwardRefRenderFunction<any, BigListInfiniteProps<any>> = ({
-  isItemLoaded,
-  loadMoreItems,
-  threshold,
-  minimumBatchSize,
-  memonized,
-  children,
-  itemCount,
-  throttleTime = 10,
-  isGrid = false,
-  ...props
-}, ref) => {
+const _BigListScroller: React.ForwardRefRenderFunction<
+  any,
+  BigListInfiniteProps
+> = (
+  {
+    isItemLoaded,
+    loadMoreItems,
+    threshold,
+    minimumBatchSize,
+    memonized,
+    children,
+    itemCount,
+    throttleTime = 10,
+    isGrid = false,
+    ...props
+  },
+  ref
+) => {
   const rowMemonized = useRef(children);
   const outerRef = useRef<HTMLDivElement>(null);
   const forwardedRef = useForwardedRef<HTMLDivElement>(ref);
@@ -78,8 +95,7 @@ const _BigListScroller: React.ForwardRefRenderFunction<any, BigListInfiniteProps
 
   // memonize
   useEffect(() => {
-    if (memonized)
-      rowMemonized.current = memonizedRow(children);
+    if (memonized) rowMemonized.current = memonizedRow(children);
   }, [memonized, children]);
 
   // scroll
@@ -92,21 +108,19 @@ const _BigListScroller: React.ForwardRefRenderFunction<any, BigListInfiniteProps
         if (isGrid) {
           const scrollLeft = getScrollPosition('x') - offsetLeft;
           ctrl.scrollTo({ left: scrollLeft, top: scrollTop });
-        }
-        else {
+        } else {
           ctrl.scrollTo(scrollTop, 0);
         }
         console.log('>>> BigListScroller: scrollTop:', scrollTop);
-      }
-      else console.log('*** BigListScroller: ref is null');
+      } else console.log('*** BigListScroller: ref is null');
     }, throttleTime);
 
     window.addEventListener('scroll', handleWindowScroll);
     return () => {
       handleWindowScroll.cancel();
       window.removeEventListener('scroll', handleWindowScroll);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isGrid]);
 
   const onScroll = useCallback(
@@ -132,39 +146,39 @@ const _BigListScroller: React.ForwardRefRenderFunction<any, BigListInfiniteProps
   // @ts-ignore
   return (
     <AutoSize>
-    {({ height, width }) => ( 
-      <InfiniteLoader 
-        isItemLoaded={isItemLoaded}
-        itemCount={itemCount}
-        loadMoreItems={loadMoreItems}
-        threshold={threshold}
-        minimumBatchSize={minimumBatchSize}
-      >
-      {({ onItemsRendered, ref: setRef }) => (
-          <List
-            ref={(node) => { 
-              if (node) {
-                setRef(node);
-                // @ts-ignore
-                forwardedRef.current = node;
-                //console.log('>>>>>BigListScroller: setref', typeof ref);
-              }
-            }}
-            outerRef={outerRef}
-            itemCount={itemCount} 
-            onItemsRendered={onItemsRendered}
-            width={width}
-            height={props.height ?? height}
-            onScroll={onScroll}
-            {...props}
-          >
-            {rowMemonized.current}
-          </List>
-        )}
-      </InfiniteLoader>
-    )}
+      {({ height, width }) => (
+        <InfiniteLoader
+          isItemLoaded={isItemLoaded}
+          itemCount={itemCount}
+          loadMoreItems={loadMoreItems}
+          threshold={threshold}
+          minimumBatchSize={minimumBatchSize}
+        >
+          {({ onItemsRendered, ref: setRef }) => (
+            <List
+              ref={(node) => {
+                if (node) {
+                  setRef(node);
+                  // @ts-ignore
+                  forwardedRef.current = node;
+                  //console.log('>>>>>BigListScroller: setref', typeof ref);
+                }
+              }}
+              outerRef={outerRef}
+              itemCount={itemCount}
+              onItemsRendered={onItemsRendered}
+              width={width}
+              height={props.height ?? height}
+              onScroll={onScroll}
+              {...props}
+            >
+              {rowMemonized.current}
+            </List>
+          )}
+        </InfiniteLoader>
+      )}
     </AutoSize>
   );
-}
+};
 
 export const BigListScroller = React.forwardRef(_BigListScroller);

@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  BigListScroller
-} from './BigListScroller';
+import { BigListScroller } from './BigListScroller';
 import type { ListChildComponentProps } from 'react-window';
 import styles from './app.module.css';
 
@@ -19,9 +17,16 @@ function getItemCount(): Promise<number> {
 function loadItems(page: number, pageSize: number): Promise<Item[]> {
   const start = (page - 1) * pageSize;
   return new Promise((resolve, reject) => {
-    setTimeout(() => resolve(
-      Array.from({length: pageSize}).map((_, idx) => ({ id: start + idx + 1, name: `name ${start + idx + 1}` }))
-    ), 500);
+    setTimeout(
+      () =>
+        resolve(
+          Array.from({ length: pageSize }).map((_, idx) => ({
+            id: start + idx + 1,
+            name: `name ${start + idx + 1}`,
+          }))
+        ),
+      500
+    );
   });
 }
 
@@ -41,17 +46,25 @@ export function InfiniteScrollerExample() {
       setItemCount(Math.min(itemsLen + pageSize, res));
     });
   }, [itemsLen]);
-  const listHeight = itemCount * rowItemHeight + 100 ;
+  const listHeight = itemCount * rowItemHeight + 100;
 
-  console.log('>>> item count:', itemCount, ', is loading:', loading, listHeight);
+  console.log(
+    '>>> item count:',
+    itemCount,
+    ', is loading:',
+    loading,
+    listHeight
+  );
   return (
     <div className={`container-fluid`}>
       <div className={`row`}>
         <p>Vertical:</p>
-        <button onClick={() => listRef.current.scrollToItem(50)}>scroll to</button>
+        <button onClick={() => listRef.current.scrollToItem(50)}>
+          scroll to
+        </button>
       </div>
-      <div className={`row`} style={{height: listHeight, overflow: 'hidden'}}>
-        <div className={`col`} style={{overflow: 'hidden'}}>
+      <div className={`row`} style={{ height: listHeight, overflow: 'hidden' }}>
+        <div className={`col`} style={{ overflow: 'hidden' }}>
           <BigListScroller
             className={styles['list']}
             ref={listRef}
@@ -80,10 +93,7 @@ export function InfiniteScrollerExample() {
     if (loading) return;
     setLoading(true);
 
-    const promise = loadItems(
-      Math.floor(stopIndex / pageSize) + 1,
-      pageSize
-    );
+    const promise = loadItems(Math.floor(stopIndex / pageSize) + 1, pageSize);
     promise.then((result) => {
       items.current.splice(items.current.length, 0, ...result);
       setLoading(false);
@@ -96,7 +106,11 @@ export function InfiniteScrollerExample() {
       return null;
     }
     const item = items.current[index];
-    return <div style={style}>Row {index}: {item.name}</div>
+    return (
+      <div style={style}>
+        Row {index}: {item.name}
+      </div>
+    );
   }
 }
 

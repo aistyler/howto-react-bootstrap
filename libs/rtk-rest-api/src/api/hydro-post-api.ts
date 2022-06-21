@@ -1,5 +1,8 @@
 import { baseApi as api } from './hydro-api';
-import { uniPosts_onQueryStarted, uniPosts_onCacheEntryAdded } from '../slices/uni-posts.slice';
+import {
+  uniPosts_onQueryStarted,
+  uniPosts_onCacheEntryAdded,
+} from '../slices/uni-posts.slice';
 
 const injectedRtkApi = api.injectEndpoints({
   endpoints: (build) => ({
@@ -42,10 +45,13 @@ const injectedRtkApi = api.injectEndpoints({
       GetUniPostsByIdApiResponse,
       GetUniPostsByIdApiArg
     >({
-      query: (queryArg) => ({ url: `/uni-posts/${queryArg.id}`, params: {
-        fields: queryArg.fields,
-        populate: queryArg.populate,
-      } }),
+      query: (queryArg) => ({
+        url: `/uni-posts/${queryArg.id}`,
+        params: {
+          fields: queryArg.fields,
+          populate: queryArg.populate,
+        },
+      }),
       onQueryStarted(arg, api) {
         return uniPosts_onQueryStarted(arg, api);
       },
@@ -104,7 +110,7 @@ export type UniPostsPost = {
     kind?: 'topic' | 'reply';
     category?: {
       data?: UniPostsCategory;
-    },
+    };
     parent?: {
       data?: UniPostsPost;
     };

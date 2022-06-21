@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  BigListInfinite
-} from '@howto/bs-components';
+import { BigListInfinite } from '@howto/bs-components';
 import { ListChildComponentProps } from 'react-window';
 
 type Item = {
@@ -18,9 +16,16 @@ function getItemCount(): Promise<number> {
 function loadItems(page: number, pageSize: number): Promise<Item[]> {
   const start = (page - 1) * pageSize;
   return new Promise((resolve, reject) => {
-    setTimeout(() => resolve(
-      Array.from({length: pageSize}).map((_, idx) => ({ id: start + idx + 1, name: `name ${start + idx + 1}` }))
-    ), 500);
+    setTimeout(
+      () =>
+        resolve(
+          Array.from({ length: pageSize }).map((_, idx) => ({
+            id: start + idx + 1,
+            name: `name ${start + idx + 1}`,
+          }))
+        ),
+      500
+    );
   });
 }
 
@@ -28,7 +33,7 @@ const pageSize = 30;
 
 export function App() {
   const [loading, setLoading] = React.useState(false);
-  const [ itemCount, setItemCount ] = React.useState(1);
+  const [itemCount, setItemCount] = React.useState(1);
   const items = React.useRef([] as Item[]);
   const listRef = React.createRef<any>();
 
@@ -69,10 +74,7 @@ export function App() {
     if (loading) return;
     setLoading(true);
 
-    const promise = loadItems(
-      Math.floor(stopIndex / pageSize) + 1,
-      pageSize
-    );
+    const promise = loadItems(Math.floor(stopIndex / pageSize) + 1, pageSize);
     promise.then((result) => {
       items.current.splice(items.current.length, 0, ...result);
       setLoading(false);
@@ -85,7 +87,11 @@ export function App() {
       return null;
     }
     const item = items.current[index];
-    return <div style={style}>Row {index}: {item.name}</div>
+    return (
+      <div style={style}>
+        Row {index}: {item.name}
+      </div>
+    );
   }
 }
 

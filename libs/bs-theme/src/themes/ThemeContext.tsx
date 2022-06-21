@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-} from 'react'
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 //
 // color theme and colors
@@ -43,12 +38,13 @@ const isServer = typeof window === 'undefined';
 
 const _getTheme = () => {
   if (isServer) return defaultColorTheme;
-  return (localStorage.getItem(THEME_STORAGE_KEY) || defaultColorTheme) as ColorThemeName;
+  return (localStorage.getItem(THEME_STORAGE_KEY) ||
+    defaultColorTheme) as ColorThemeName;
 };
 
 const _setTheme = (theme: ColorThemeName) => {
   if (!isServer) localStorage.setItem(THEME_STORAGE_KEY, theme);
-}
+};
 
 //
 // theme context
@@ -58,13 +54,13 @@ const defaultContext: UseThemeProps = {
   setTheme: _setTheme,
 };
 
-const ThemeContext = createContext<UseThemeProps>(defaultContext)
+const ThemeContext = createContext<UseThemeProps>(defaultContext);
 ThemeContext.displayName = 'ThemeProvider';
 
 //
 // hook
 //
-export const useTheme = () => useContext(ThemeContext) ?? defaultContext
+export const useTheme = () => useContext(ThemeContext) ?? defaultContext;
 
 const MEDIA_color = '(prefers-color-scheme: dark)';
 
@@ -73,18 +69,20 @@ const MEDIA_color = '(prefers-color-scheme: dark)';
 //
 function _setRootCss(rootCss: string) {
   const rootStyle = document.styleSheets[0];
-  if (rootStyle.cssRules.length > 0) for (let i = rootStyle.cssRules.length -1; i >= 0; i--) rootStyle.deleteRule(i);
+  if (rootStyle.cssRules.length > 0)
+    for (let i = rootStyle.cssRules.length - 1; i >= 0; i--)
+      rootStyle.deleteRule(i);
   rootStyle.insertRule(rootCss);
 }
 
 //
 // ThemeProvider
 //
-export const ThemeProvider = ({ children }: { children?: React.ReactNode; }) => {
+export const ThemeProvider = ({ children }: { children?: React.ReactNode }) => {
   const [theme, setThemeState] = useState<ColorThemeName>(_getTheme);
   const isSystemDark = useMediaQuery(MEDIA_color);
 
-  const setTheme =(_theme: ColorThemeName) => {
+  const setTheme = (_theme: ColorThemeName) => {
     setThemeState(_theme);
     _setTheme(_theme);
   };
@@ -102,10 +100,12 @@ export const ThemeProvider = ({ children }: { children?: React.ReactNode; }) => 
   }, [theme, isSystemDark]);
 
   return (
-    <ThemeContext.Provider value={{
-      theme,
-      setTheme,
-    }} >
+    <ThemeContext.Provider
+      value={{
+        theme,
+        setTheme,
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );

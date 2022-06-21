@@ -1,9 +1,7 @@
 import React from 'react';
-import {
-  BigList, RenderRow, Scrollbar,
-} from '@howto/bs-components';
+import { BigList, RenderRow, Scrollbar } from '@howto/bs-components';
 
-const Row:RenderRow<any> = ({ index, style }) => (
+const Row: RenderRow<any> = ({ index, style }) => (
   <div style={style}>Row {index}</div>
 );
 
@@ -12,7 +10,9 @@ export function SimpleExample() {
 
   return (
     <>
-    <button onClick={() => listRef.current.scrollToItem(500)}>scroll to row 500</button>
+      <button onClick={() => listRef.current.scrollToItem(500)}>
+        scroll to row 500
+      </button>
       <p> Vertical: </p>
       <BigList
         height={150}

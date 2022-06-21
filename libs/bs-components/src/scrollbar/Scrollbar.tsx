@@ -1,11 +1,20 @@
-import React, { useCallback, ComponentProps, ForwardRefRenderFunction } from 'react';
+import React, {
+  useCallback,
+  ComponentProps,
+  ForwardRefRenderFunction,
+} from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 interface ScrollbarProps extends ComponentProps<typeof Scrollbars> {
   forwardedRef: any;
 }
 
-const CustomScrollbars: React.FC<ScrollbarProps> = ({ onScroll, forwardedRef, style, children }) => {
+const CustomScrollbars: React.FC<ScrollbarProps> = ({
+  onScroll,
+  forwardedRef,
+  style,
+  children,
+}) => {
   const refSetter = useCallback((scrollbarsRef: any) => {
     if (scrollbarsRef) {
       forwardedRef(scrollbarsRef.view);
@@ -17,7 +26,7 @@ const CustomScrollbars: React.FC<ScrollbarProps> = ({ onScroll, forwardedRef, st
   return (
     <Scrollbars
       ref={refSetter}
-      style={{ ...style, overflow: "hidden" }}
+      style={{ ...style, overflow: 'hidden' }}
       onScroll={onScroll}
     >
       {children}

@@ -4,7 +4,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "nx serve",
-    "dev2": "nx serve bootstrap-theme"
+    "dev2": "nx serve bootstrap-theme",
+    "lint": "nx run-many --target=lint --all",
+    "lint:fix": "nx format:write"
   },
   "private": true,
   "dependencies": {

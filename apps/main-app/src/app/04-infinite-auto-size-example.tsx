@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  BigListInfinite
-} from '@howto/bs-components';
+import { BigListInfinite } from '@howto/bs-components';
 import { ListChildComponentProps } from 'react-window';
 import styles from './app.module.css';
 
@@ -19,9 +17,16 @@ function getItemCount(): Promise<number> {
 function loadItems(page: number, pageSize: number): Promise<Item[]> {
   const start = (page - 1) * pageSize;
   return new Promise((resolve, reject) => {
-    setTimeout(() => resolve(
-      Array.from({length: pageSize}).map((_, idx) => ({ id: start + idx + 1, name: `name ${start + idx + 1}` }))
-    ), 500);
+    setTimeout(
+      () =>
+        resolve(
+          Array.from({ length: pageSize }).map((_, idx) => ({
+            id: start + idx + 1,
+            name: `name ${start + idx + 1}`,
+          }))
+        ),
+      500
+    );
   });
 }
 
@@ -29,7 +34,7 @@ const pageSize = 30;
 
 export function InfiniteAutoSizeExample() {
   const [loading, setLoading] = React.useState(false);
-  const [ itemCount, setItemCount ] = React.useState(1);
+  const [itemCount, setItemCount] = React.useState(1);
   const items = React.useRef([] as Item[]);
   const listRef = React.useRef<any>();
 
@@ -41,13 +46,22 @@ export function InfiniteAutoSizeExample() {
     });
   }, [itemSize]);
 
-  console.log('>>> item count:', itemCount, ', is loading:', loading, listRef.current);
+  console.log(
+    '>>> item count:',
+    itemCount,
+    ', is loading:',
+    loading,
+    listRef.current
+  );
   return (
     <div className={`container-fluid d-flex flex-column h-100`}>
-      
       <div className={'row'}>
-        <div className={'col'}><p> Vertical: </p></div>
-        <button onClick={() => listRef.current.scrollToItem(50)}>scroll to</button>
+        <div className={'col'}>
+          <p> Vertical: </p>
+        </div>
+        <button onClick={() => listRef.current.scrollToItem(50)}>
+          scroll to
+        </button>
       </div>
 
       <div className={'row flex-grow-1'}>
@@ -65,7 +79,6 @@ export function InfiniteAutoSizeExample() {
           </BigListInfinite>
         </div>
       </div>
-      
     </div>
   );
 
@@ -79,10 +92,7 @@ export function InfiniteAutoSizeExample() {
     if (loading) return;
     setLoading(true);
 
-    const promise = loadItems(
-      Math.floor(stopIndex / pageSize) + 1,
-      pageSize
-    );
+    const promise = loadItems(Math.floor(stopIndex / pageSize) + 1, pageSize);
     promise.then((result) => {
       items.current.splice(items.current.length, 0, ...result);
       setLoading(false);
@@ -95,7 +105,11 @@ export function InfiniteAutoSizeExample() {
       return null;
     }
     const item = items.current[index];
-    return <div style={style}>Row {index}: {item.name}</div>
+    return (
+      <div style={style}>
+        Row {index}: {item.name}
+      </div>
+    );
   }
 }
 

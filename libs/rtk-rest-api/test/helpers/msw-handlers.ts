@@ -6,10 +6,7 @@ import err400InvalidSyntax from './mock-data/error_400-invalid-syntax.json';
 import qs from 'qs';
 import { validatePaginationQuery } from './pagination-query';
 
-export {
-  uniPostsOne,
-  uniPostsMany,
-};
+export { uniPostsOne, uniPostsMany };
 
 export const API_BASE_URL = 'http://localhost:1337/api';
 
@@ -81,9 +78,11 @@ const _mswFindOneHandlers = (
         : passthrough
         ? req.passthrough()
         : res(
-            ctx.status(status), 
-            ctx.json({ data: { ...e.data, id: parseInt(req.params['id'] as string) } })
-      )
+            ctx.status(status),
+            ctx.json({
+              data: { ...e.data, id: parseInt(req.params['id'] as string) },
+            })
+          )
     )
   );
 const _mswPostHandlers = (

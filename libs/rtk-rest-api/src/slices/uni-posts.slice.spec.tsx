@@ -134,16 +134,15 @@ describe('# slice using hooks', () => {
     //
     // start query
     const arg = { pagination: { page: 1, pageSize: 2 } };
-    const { result } = renderHook(
-      () => useGetUniPostsQuery(arg),
-      { wrapper }
-    );
+    const { result } = renderHook(() => useGetUniPostsQuery(arg), { wrapper });
 
     expect(result.current.isLoading).toBe(true);
 
     //
     // wait query result
-    await waitFor(() => expect(result.current.isLoading).toBe(false), { timeout: 2000 });
+    await waitFor(() => expect(result.current.isLoading).toBe(false), {
+      timeout: 2000,
+    });
 
     //
     // check the result
@@ -153,6 +152,10 @@ describe('# slice using hooks', () => {
     expect(data?.data?.length).toBe(arg.pagination.pageSize);
 
     entities = selector.selectIds(store.getState());
-    expect(entities).toEqual(data?.data?.map((e) => e.id).sort((e1, e2) => (e2 as number) - (e1 as number)));
+    expect(entities).toEqual(
+      data?.data
+        ?.map((e) => e.id)
+        .sort((e1, e2) => (e2 as number) - (e1 as number))
+    );
   });
 });

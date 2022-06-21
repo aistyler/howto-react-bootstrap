@@ -84,10 +84,12 @@ describe('# UniPosts -- Hooks', () => {
 
   it('## findMany & findById', async () => {
     // findMany using hook
-    const arg = { pagination: { limit: 5 }};
+    const arg = { pagination: { limit: 5 } };
     const { result } = renderHook(() => useGetUniPostsQuery(arg), { wrapper });
     // wait response
-    await waitFor(() => expect(result.current.isLoading).toBe(false), { timeout: updateTimeout });
+    await waitFor(() => expect(result.current.isLoading).toBe(false), {
+      timeout: updateTimeout,
+    });
     // check result
     const { data, error, isLoading, isError, isSuccess } = result.current;
     expect(isLoading).toBe(false);
@@ -103,9 +105,14 @@ describe('# UniPosts -- Hooks', () => {
 
     //
     // findById
-    const { result: result2 } = renderHook(() => useGetUniPostsByIdQuery({ id: postId }), { wrapper });
+    const { result: result2 } = renderHook(
+      () => useGetUniPostsByIdQuery({ id: postId }),
+      { wrapper }
+    );
     // wait
-    await waitFor(() => expect(result2.current.isLoading).toBe(false), { timeout: updateTimeout });
+    await waitFor(() => expect(result2.current.isLoading).toBe(false), {
+      timeout: updateTimeout,
+    });
     // check
     expect(result2.current.isLoading).toBe(false);
     expect(result2.current.error).toBeUndefined();
@@ -131,17 +138,18 @@ describe('# Uni Post with login', () => {
       kind: 'topic' as const,
       category: 1,
     };
-    const { result } = renderHook(
-      () => usePostUniPostsMutation({}),
-      { wrapper }
-    );
+    const { result } = renderHook(() => usePostUniPostsMutation({}), {
+      wrapper,
+    });
 
     const [createOne] = result.current;
     act(() => {
       createOne({ body: { data: postInput } });
     });
 
-    await waitFor(() => expect(result.current[1].isLoading).toBe(false), { timeout: updateTimeout });
+    await waitFor(() => expect(result.current[1].isLoading).toBe(false), {
+      timeout: updateTimeout,
+    });
 
     const { error, data, isLoading, isError, isSuccess } = result.current[1];
     expect(isLoading).toBe(false);
@@ -156,15 +164,19 @@ describe('# Uni Post with login', () => {
     const updateInput = {
       title: 'test title updated',
     };
-    const { result: result2 } =
-      renderHook(() => usePutUniPostsByIdMutation({}), { wrapper });
+    const { result: result2 } = renderHook(
+      () => usePutUniPostsByIdMutation({}),
+      { wrapper }
+    );
 
     const [updateById] = result2.current;
     act(() => {
       updateById({ id: postId, body: { data: updateInput } });
     });
 
-    await waitFor(() => expect(result2.current[1].isLoading).toBe(false), { timeout: updateTimeout });
+    await waitFor(() => expect(result2.current[1].isLoading).toBe(false), {
+      timeout: updateTimeout,
+    });
 
     const {
       error: error2,
@@ -181,15 +193,19 @@ describe('# Uni Post with login', () => {
 
     //
     // delete by id
-    const { result: result3 } =
-      renderHook(() => useDeleteUniPostsByIdMutation({}), { wrapper });
+    const { result: result3 } = renderHook(
+      () => useDeleteUniPostsByIdMutation({}),
+      { wrapper }
+    );
 
     const [deleteById] = result3.current;
     act(() => {
       deleteById({ id: postId });
     });
 
-    await waitFor(() => expect(result3.current[1].isLoading).toBe(false), { timeout: updateTimeout });
+    await waitFor(() => expect(result3.current[1].isLoading).toBe(false), {
+      timeout: updateTimeout,
+    });
 
     const {
       error: error3,
