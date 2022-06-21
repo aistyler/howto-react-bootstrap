@@ -1,0 +1,8 @@
+{
+  "data": null,
+  "error": {
+    "status": 400,
+    "name": "SyntaxError",
+    "message": "Unexpected token } in JSON at position 60"
+  }
+}

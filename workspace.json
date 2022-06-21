@@ -5,6 +5,7 @@
     "bootstrap-theme": "apps/bootstrap-theme",
     "bs-components": "libs/bs-components",
     "bs-theme": "libs/bs-theme",
-    "main-app": "apps/main-app"
+    "main-app": "apps/main-app",
+    "rtk-rest-api": "libs/rtk-rest-api"
   }
 }
