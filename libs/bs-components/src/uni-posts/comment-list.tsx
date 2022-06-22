@@ -16,6 +16,7 @@ import {
   uniPostsCacheRemove,
   PutUniPostsByIdApiArg,
   uniPostsCacheUpsert,
+  useGetUniPostsByIdQuery,
 } from '@howto/rtk-rest-api';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Container, Col, Row } from 'react-bootstrap';
@@ -47,9 +48,9 @@ interface UniPostsListProps extends HTMLProps<HTMLDivElement> {
 
   itemCount: number;
 
-  categoryId?: number;
+  topicId?: number;
 
-  categoryData?: UniPostsCategory;
+  topicData?: UniPostsPost;
 
   listRef?: React.Ref<HTMLDivElement | undefined>;
 
@@ -63,10 +64,12 @@ const UniPostsCommentListView: React.FC<UniPostsListProps> = (props) => (
   <div className={`container-fluid d-flex flex-column h-90`}>
     <div className={'row'}>
       <div className={'col'}>
-        <p> Category: {props.categoryData && props.categoryData.attributes?.name} ({props.itemCount}/{props.entityCount}) </p>
-        <button name={'new_post'} onClick={props.buttonClickHandler}>new post</button>
-        <button name={'update_post'} onClick={props.buttonClickHandler}>update post</button>
-        <button name={'delete_post'} onClick={props.buttonClickHandler}>delete post</button>
+        <p> Topic: {props.topicData && props.topicData.attributes?.title}
+           ({props.itemCount}/{props.entityCount}) 
+        </p>
+        <button name={'new_comment'} onClick={props.buttonClickHandler}>new comment</button>
+        <button name={'update_comment'} onClick={props.buttonClickHandler}>update comment</button>
+        <button name={'delete_comment'} onClick={props.buttonClickHandler}>delete comment</button>
         <p>{props.queryStatus.message || ''}</p>
       </div>
     </div>
@@ -97,13 +100,13 @@ export function UniPostsComments(props: Partial<UniPostsListProps>) {
   const listRef = useRef<HTMLDivElement>();
 
   const [queryStatus, setQueryStatus] = useState<QueryStatus>({ status: 'idle', message: '' });
-  const [category, setCategory] = useState<number|undefined>(props.categoryId);
+  const [topic, setTopic] = useState<number|undefined>(props.topicId);
   const [itemCount, setItemCount] = useState(0);
   const entityData = useRef<EntityData>([] as EntityData);
 
-  const filters = { category, kind: 'topic' };
-  const countQueryResult = useGetUniPostsCountQuery({ filters }, { skip: !category });
-  const categoryQueryResult = useGetCategoriesByIdQuery({ id: category as number }, { skip: !category });
+  const filters = { parent: topic, kind: 'reply' };
+  const countQueryResult = useGetUniPostsCountQuery({ filters }, { skip: !topic });
+  const topicQueryResult = useGetUniPostsByIdQuery({ id: topic as number, populate: '*' }, { skip: !topic });
   const entityCount = countQueryResult.data || 0;
 
   const updateItemCount = () => setItemCount(Math.min(countQueryResult.data || 0, entityData.current.length + pageSize));
@@ -113,7 +116,9 @@ export function UniPostsComments(props: Partial<UniPostsListProps>) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [countQueryResult, entityData.current.length]);
 
-  console.log(`category: ${category}, count: ${itemCount}/${entityCount}, dataLen: ${entityData.current.length}, status: ${queryStatus.status}`);
+  const categoryData = topicQueryResult.data?.data ? topicQueryResult.data?.data.attributes?.category?.data : undefined;
+
+  console.log(`topic: ${topic}, category: ${categoryData ? categoryData.id : '?'}, count: ${itemCount}/${entityCount}, dataLen: ${entityData.current.length}, status: ${queryStatus.status}`);
 
   // render
   const _props = {
@@ -123,7 +128,7 @@ export function UniPostsComments(props: Partial<UniPostsListProps>) {
     loadMoreItems,
     entityCount,
     itemCount,
-    categoryData: categoryQueryResult.data?.data,
+    topicData: topicQueryResult.data?.data,
     listRef,
     buttonClickHandler,
   };
@@ -132,25 +137,27 @@ export function UniPostsComments(props: Partial<UniPostsListProps>) {
   );
 
   async function buttonClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    console.log('>>>>>>>>>>', event.currentTarget.name);
-    if ('new_post' === event.currentTarget.name) {
+    if ('new_comment' === event.currentTarget.name) {
       await _createOne({ body: { data: {
-        title: 'created by howto react-bootstarp at' + Date.now(),
-        content: 'content ' + Date.now(),
-        category: category as number,
-        kind: 'topic',
+        title: 'comment for ' + topic,
+        content: `comment for ${topic} at ${Date.now()}`,
+        parent: topic,
+        category: (categoryData && categoryData.id) ? categoryData.id : 0,
+        kind: 'reply',
       }}});
     }
-    else if ('update_post' === event.currentTarget.name) {
-      _updateOne({
-        id: uniPostsEntityIds(store.getState()).at(0) as number,
+    else if ('update_comment' === event.currentTarget.name) {
+       // the first item
+       entityData.current[0] && _updateOne({
+        id: entityData.current[0].id,
         body: { data: {
           content: 'updated at' + Date.now(),
         }}
       });
     }
-    else if ('delete_post' === event.currentTarget.name) {
-      _deleteOne(uniPostsEntityIds(store.getState()).at(0) as number);
+    else if ('delete_comment' === event.currentTarget.name) {
+       // the first item
+       entityData.current[0] && _deleteOne(entityData.current[0].id);
     }
   }
 
@@ -160,7 +167,7 @@ export function UniPostsComments(props: Partial<UniPostsListProps>) {
       const [cmd, id] = event.currentTarget.name.split(':');
       if (cmd === 'del') {
         console.log('*** 1');
-        setTimeout(() =>_deleteOne(parseInt(id)), 10);
+        _deleteOne(parseInt(id));
       }
     }
   }
@@ -211,7 +218,7 @@ export function UniPostsComments(props: Partial<UniPostsListProps>) {
       console.log('>>> normalized data:', uniPostsEntityIds(state));
       // set data
       entityData.current = (uniPostsEntitiesAsArray(state) as UniPostsPost[]).filter(
-        (e) => e?.attributes?.category?.data?.id === category && e?.attributes?.kind === 'topic'
+        (e) => e?.attributes?.parent?.data?.id === topic && e?.attributes?.kind === 'reply'
       );
 
       setQueryStatus({ status: 'success', message: 'Success' });

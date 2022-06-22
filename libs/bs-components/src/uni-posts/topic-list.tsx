@@ -142,8 +142,9 @@ export function UniPostsTopics(props: Partial<UniPostsListProps>) {
       }}});
     }
     else if ('update_post' === event.currentTarget.name) {
-      _updateOne({
-        id: uniPostsEntityIds(store.getState()).at(0) as number,
+      // the first item
+      entityData.current[0] && _updateOne({
+        id: entityData.current[0].id,
         body: { data: {
           title: 'updated title at ' + Date.now(),
           content: 'updated at' + Date.now(),
@@ -151,7 +152,8 @@ export function UniPostsTopics(props: Partial<UniPostsListProps>) {
       });
     }
     else if ('delete_post' === event.currentTarget.name) {
-      _deleteOne(uniPostsEntityIds(store.getState()).at(0) as number);
+      // the first item
+      entityData.current[0] && _deleteOne(entityData.current[0].id);
     }
   }
 
@@ -161,7 +163,7 @@ export function UniPostsTopics(props: Partial<UniPostsListProps>) {
       const [cmd, id] = event.currentTarget.name.split(':');
       if (cmd === 'del') {
         console.log('*** 1');
-        setTimeout(() =>_deleteOne(parseInt(id)), 10);
+        _deleteOne(parseInt(id));
       }
     }
   }
