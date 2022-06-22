@@ -8,6 +8,9 @@ import {
   UniPostsPost, 
   useGetUniPostsCountQuery,
   useGetCategoriesByIdQuery,
+  RtkQueryError,
+  uniPostsEntityIds,
+  uniPostsEntitiesAsArray,
 } from '@howto/rtk-rest-api';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Container, Col, Row } from 'react-bootstrap';
@@ -16,6 +19,7 @@ import { ListChildComponentProps } from 'react-window';
 import { BigListInfinite } from '../list/BigListInfinite';
 import { CommentBox } from '../comment-box/comment-box';
 import { useStore } from 'react-redux';
+import { AppState, AppStore } from '@howto/hydro-store';
 
 //
 // Types
@@ -38,6 +42,8 @@ interface UniPostsListProps extends HTMLProps<HTMLDivElement> {
   categoryId?: number;
 
   categoryData?: UniPostsCategory;
+
+  listRef?: React.MutableRefObject<any>;
 }
 
 //
@@ -51,10 +57,11 @@ const UniPostsListView: React.FC<UniPostsListProps> = (props) => (
       </div>
     </div>
 
-    <div className={'row flex-grow-1'}>
+    <div className={'row h-100'}>
       <div className={'col'}>
         <BigListInfinite
-          itemSize={35}
+          ref={props.listRef}
+          itemSize={150}
           isItemLoaded={props.isItemLoaded}
           loadMoreItems={props.loadMoreItems}
           itemCount={props.itemCount}
@@ -74,11 +81,12 @@ const pageSize = 29;
 // Controller component
 //
 export function UniPostsList(props: Partial<UniPostsListProps>) {
-  const store = useStore();
+  const store = useStore() as AppStore;
+  const listRef = useRef();
 
   const [queryStatus, setQueryStatus] = useState<QueryStatus>({ status: 'idle', message: '' });
   const [category, setCategory] = useState<number|undefined>(props.categoryId);
-  const [entityCount, setEntityCount] = useState<EntityCount>(0);
+  const [entityCount, setEntityCount] = useState<EntityCount>(1);
   const entityData = useRef<EntityData>([] as EntityData);
 
   const filters = { category, kind: 'topic' };
@@ -90,12 +98,16 @@ export function UniPostsList(props: Partial<UniPostsListProps>) {
       setEntityCount(Math.min(countQueryResult.data, entityData.current.length + pageSize));
   }, [countQueryResult, entityData.current.length]);
 
+  console.log(`category: ${category}, entityCount: ${entityCount}, dataLen: ${entityData.current.length}`);
+
+  // render
   const _props = {
     renderRow,
     isItemLoaded,
     loadMoreItems,
     itemCount: entityCount,
     categoryData: categoryQueryResult.data?.data,
+    listRef,
   };
   return (
     <UniPostsListView {..._props}/>
@@ -129,9 +141,11 @@ export function UniPostsList(props: Partial<UniPostsListProps>) {
   }
 
   async function loadMoreItems(startIndex: number, stopIndex: number) {
+    const page = Math.floor(stopIndex / pageSize) + 1;
+    console.log('>>>>>>>>>>> loadMore page:', page);
     return _findMany({
       filters,
-      pagination: { page: Math.floor(stopIndex / pageSize) + 1, pageSize },
+      pagination: { page, pageSize },
       sort: 'createdAt',
       populate: '*',
     });
@@ -144,17 +158,23 @@ export function UniPostsList(props: Partial<UniPostsListProps>) {
     const { getUniPosts: findMany } = hydroApi.endpoints;
 
     try {
-      //@ts-ignore
-      const res: any = await store.dispatch(findMany.initiate(arg));
+      const res = await store.dispatch(findMany.initiate(arg));
 
       console.log('>>> findMany:', res);
       if (res.error) 
         return setQueryStatus({ status: 'error', message: JSON.stringify(formatRestRequestError(res.error)) });
 
-      setQueryStatus({ status: 'success', message: 'Success' });
+      // set entityData
+      const state = store.getState() as AppState;
+      console.log('>>> normalized data:', uniPostsEntityIds(state));
+      // set data
+      entityData.current = (uniPostsEntitiesAsArray(state) as UniPostsPost[]).filter(
+        (e) => e?.attributes?.category?.data?.id === category && e?.attributes?.kind === 'topic'
+      );
 
+      setQueryStatus({ status: 'success', message: 'Success' });
     } catch (e) {
-      setQueryStatus({ status: 'error', message: JSON.stringify(formatRestRequestError(e)) });
+      setQueryStatus({ status: 'error', message: JSON.stringify(formatRestRequestError(e as RtkQueryError)) });
     }
   }
 
@@ -165,15 +185,14 @@ export function UniPostsList(props: Partial<UniPostsListProps>) {
     const { deleteUniPostsById: deleteOne } = hydroApi.endpoints;
 
     try {
-      //@ts-ignore
-      const res: any = await store.dispatch(deleteOne.initiate({ id: parseInt(id) }));
+      const res = await store.dispatch(deleteOne.initiate({ id: parseInt(id) }));
       console.log('>>> deleteOne:', res);
-      if (res.error) 
-        return setQueryStatus({ status: 'error', message: JSON.stringify(formatRestRequestError(res.error)) });
+      if (!Number.isInteger(res)) 
+        return setQueryStatus({ status: 'error', message: JSON.stringify(formatRestRequestError(res as RtkQueryError)) });
 
       setQueryStatus({ status: 'success', message: 'Success' });
     } catch (e) {
-      setQueryStatus({ status: 'error', message: JSON.stringify(formatRestRequestError(e)) });
+      setQueryStatus({ status: 'error', message: JSON.stringify(formatRestRequestError(e as RtkQueryError)) });
     }
   }
 

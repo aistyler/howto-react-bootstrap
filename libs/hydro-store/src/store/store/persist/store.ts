@@ -30,7 +30,6 @@ const persistConfig = {
 };
 
 const combinedReducer = combineReducers(reducers);
-export type AppState = ReturnType<typeof combinedReducer>;
 
 const rootReducer = (state: AppState, action: AnyAction): AppState => {
   if(action.type === 'RESET_APP') state = {} as AppState;
@@ -51,7 +50,6 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 export const pergeStore = () => persistor.purge();
-
 export const getAppState = (): AppState => store.getState() as AppState;
 
 export const resetApiStore = async () => {
@@ -64,6 +62,9 @@ export const resetStore = () => {
   persistor.purge();
 }
 
+export type AppStore = typeof store;
+export type AppState = ReturnType<typeof combinedReducer>;
+
 // optional, but required for refetchOnFocus/refetchOnReconnect behaviors
 // see `setupListeners` docs - takes an optional callback as the 2nd arg for customization
-setupListeners(store.dispatch);
+// setupListeners(store.dispatch);

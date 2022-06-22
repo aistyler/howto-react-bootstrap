@@ -1,5 +1,5 @@
 import React, { HTMLProps } from 'react';
-import { GetUniPostsByIdApiResponse } from '@yac/hydro-rest-api';
+import { GetUniPostsByIdApiResponse } from '@howto/rtk-rest-api';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Col, Row } from 'react-bootstrap';
 
@@ -15,7 +15,6 @@ interface CommentBoxProps extends HTMLProps<HTMLDivElement> {
 //
 // View component
 //
-
 
 //
 // Controller component
