@@ -51,32 +51,32 @@ interface UniPostsCommentsProps extends HTMLProps<HTMLDivElement> {
 const UniPostsCommentListView: React.FC<UniPostsCommentsProps> = (props) => {
   return (
     <div className={`container-fluid d-flex flex-column h-90`}>
-        <div className={'row'}>
-          <div className={'col'}>
-            <p> Topic: {props.topicData && props.topicData.attributes?.title}
-              ({props.itemCount}/{props.entityCount}) 
-            </p>
-            <button name={'new_comment'} onClick={props.buttonClickHandler}>new comment</button>
-            <button name={'update_comment'} onClick={props.buttonClickHandler}>update comment</button>
-            <button name={'delete_comment'} onClick={props.buttonClickHandler}>delete comment</button>
-            <p>{props.queryStatus.message || ''}</p>
-          </div>
-        </div>
-        <div className={'row flex-grow-1'}>
-          <div className={'col'}>
-            <BigListInfinite
-              ref={props.listRef}
-              itemSize={170}
-              isItemLoaded={props.isItemLoaded}
-              loadMoreItems={props.loadMoreItems}
-              itemCount={props.itemCount}
-              memonized
-            >
-              {props.renderRow}
-            </BigListInfinite>
-          </div>
+      <div className={'row'}>
+        <div className={'col'}>
+          <p> Topic: {props.topicData && props.topicData.attributes?.title}
+            ({props.itemCount}/{props.entityCount}) 
+          </p>
+          <button name={'new_comment'} onClick={props.buttonClickHandler}>new comment</button>
+          <button name={'update_comment'} onClick={props.buttonClickHandler}>update comment</button>
+          <button name={'delete_comment'} onClick={props.buttonClickHandler}>delete comment</button>
+          <p>{props.queryStatus.message || ''}</p>
         </div>
       </div>
+      <div className={'row flex-grow-1'}>
+        <div className={'col'}>
+          <BigListInfinite
+            ref={props.listRef}
+            itemSize={170}
+            isItemLoaded={props.isItemLoaded}
+            loadMoreItems={props.loadMoreItems}
+            itemCount={props.itemCount}
+            memonized
+          >
+            {props.renderRow}
+          </BigListInfinite>
+        </div>
+      </div>
+     </div>
   );
 }
 
@@ -151,7 +151,7 @@ export function UniPostsComments(props: Partial<UniPostsCommentsProps>) {
     }
   }
 
-  async function onClickRowMenuItem(event: React.MouseEvent<HTMLButtonElement>) {
+  async function onDeleteRowItem(event: React.MouseEvent<HTMLButtonElement>) {
     console.log('>>>>>>', event.currentTarget.name);
     if (event.currentTarget.name) {
       const [cmd, id] = event.currentTarget.name.split(':');
@@ -162,7 +162,7 @@ export function UniPostsComments(props: Partial<UniPostsCommentsProps>) {
     }
   }
 
-  async function onRowUpdateContent(id: number, content: string) {
+  async function onUpdateRowItem(id: number, content: string) {
     await _updateOne({ id, body: { data: { content }}});
   }
 
@@ -171,7 +171,7 @@ export function UniPostsComments(props: Partial<UniPostsCommentsProps>) {
     if (!item) return null;
     return (
       <li style={style} className="list-group-item">
-        <CommentBox item={item} onDeleteItem={onClickRowMenuItem} onUpdateItem={onRowUpdateContent}/>
+        <CommentBox item={item} onDeleteItem={onDeleteRowItem} onUpdateItem={onUpdateRowItem}/>
       </li>
     );
   }
