@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef, HTMLProps, ReactEventHandler } from 'react';
-import { skipToken } from '@reduxjs/toolkit/query/react';
+import React, { useState, useEffect, useRef, HTMLProps } from 'react';
 import { 
   hydroApi, 
   formatRestRequestError, 
@@ -17,8 +16,6 @@ import {
   PutUniPostsByIdApiArg,
   uniPostsCacheUpdate,
 } from '@howto/rtk-rest-api';
-import Dropdown from 'react-bootstrap/Dropdown';
-import { Container, Col, Row } from 'react-bootstrap';
 import { ListChildComponentProps } from 'react-window';
 
 import { BigListInfinite } from '../list/BigListInfinite';
@@ -33,8 +30,6 @@ type QueryStatus = {
   status: string; message: string;
 };
 
-type EntityCount = number;
-
 type EntityData = UniPostsPost[];
 
 interface UniPostsTopicsProps extends HTMLProps<HTMLDivElement> {
@@ -44,15 +39,10 @@ interface UniPostsTopicsProps extends HTMLProps<HTMLDivElement> {
   loadMoreItems: (startIndex: number, stopIndex: number) => void | Promise<void>;
   
   entityCount: number;
-
   itemCount: number;
-
   categoryId?: number;
-
   categoryData?: UniPostsCategory;
-
   listRef?: React.Ref<HTMLDivElement | undefined>;
-
   buttonClickHandler?: React.MouseEventHandler<HTMLButtonElement>;
 }
 

@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useRef, HTMLProps, ReactEventHandler } from 'react';
-import { skipToken } from '@reduxjs/toolkit/query/react';
+import React, { useState, useEffect, useRef, HTMLProps } from 'react';
 import { 
   hydroApi, 
   formatRestRequestError, 
   GetUniPostsApiArg, 
-  UniPostsCategory, 
   UniPostsPost, 
   useGetUniPostsCountQuery,
-  useGetCategoriesByIdQuery,
   RtkQueryError,
   uniPostsEntityIds,
   uniPostsEntitiesAsArray,
@@ -18,8 +15,6 @@ import {
   uniPostsCacheUpsert,
   useGetUniPostsByIdQuery,
 } from '@howto/rtk-rest-api';
-import Dropdown from 'react-bootstrap/Dropdown';
-import { Container, Col, Row } from 'react-bootstrap';
 import { ListChildComponentProps } from 'react-window';
 
 import { BigListInfinite } from '../list/BigListInfinite';
@@ -34,8 +29,6 @@ type QueryStatus = {
   status: string; message: string;
 };
 
-type EntityCount = number;
-
 type EntityData = UniPostsPost[];
 
 interface UniPostsCommentsProps extends HTMLProps<HTMLDivElement> {
@@ -45,50 +38,47 @@ interface UniPostsCommentsProps extends HTMLProps<HTMLDivElement> {
   loadMoreItems: (startIndex: number, stopIndex: number) => void | Promise<void>;
   
   entityCount: number;
-
   itemCount: number;
-
   topicId?: number;
-
   topicData?: UniPostsPost;
-
   listRef?: React.Ref<HTMLDivElement | undefined>;
-
   buttonClickHandler?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 //
 // View component
 //
-const UniPostsCommentListView: React.FC<UniPostsCommentsProps> = (props) => (
-  <div className={`container-fluid d-flex flex-column h-90`}>
-    <div className={'row'}>
-      <div className={'col'}>
-        <p> Topic: {props.topicData && props.topicData.attributes?.title}
-           ({props.itemCount}/{props.entityCount}) 
-        </p>
-        <button name={'new_comment'} onClick={props.buttonClickHandler}>new comment</button>
-        <button name={'update_comment'} onClick={props.buttonClickHandler}>update comment</button>
-        <button name={'delete_comment'} onClick={props.buttonClickHandler}>delete comment</button>
-        <p>{props.queryStatus.message || ''}</p>
+const UniPostsCommentListView: React.FC<UniPostsCommentsProps> = (props) => {
+  return (
+    <div className={`container-fluid d-flex flex-column h-90`}>
+        <div className={'row'}>
+          <div className={'col'}>
+            <p> Topic: {props.topicData && props.topicData.attributes?.title}
+              ({props.itemCount}/{props.entityCount}) 
+            </p>
+            <button name={'new_comment'} onClick={props.buttonClickHandler}>new comment</button>
+            <button name={'update_comment'} onClick={props.buttonClickHandler}>update comment</button>
+            <button name={'delete_comment'} onClick={props.buttonClickHandler}>delete comment</button>
+            <p>{props.queryStatus.message || ''}</p>
+          </div>
+        </div>
+        <div className={'row flex-grow-1'}>
+          <div className={'col'}>
+            <BigListInfinite
+              ref={props.listRef}
+              itemSize={170}
+              isItemLoaded={props.isItemLoaded}
+              loadMoreItems={props.loadMoreItems}
+              itemCount={props.itemCount}
+              memonized
+            >
+              {props.renderRow}
+            </BigListInfinite>
+          </div>
+        </div>
       </div>
-    </div>
-    <div className={'row flex-grow-1'}>
-      <div className={'col'}>
-        <BigListInfinite
-          ref={props.listRef}
-          itemSize={150}
-          isItemLoaded={props.isItemLoaded}
-          loadMoreItems={props.loadMoreItems}
-          itemCount={props.itemCount}
-          memonized
-        >
-          {props.renderRow}
-        </BigListInfinite>
-      </div>
-    </div>
-  </div>
-);
+  );
+}
 
 const pageSize = 15;
 
