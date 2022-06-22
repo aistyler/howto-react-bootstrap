@@ -15,7 +15,7 @@ describe(`# ${CommentBox.name}`, () => {
   });
 
   it('should render successfully', () => {
-    const { baseElement } = render(<CommentBox item={{}} onClickMenuItem={jest.fn} />, { wrapper });
+    const { baseElement } = render(<CommentBox item={{}} onDeleteItem={jest.fn} />, { wrapper });
     expect(baseElement).toBeTruthy();
   });
 });

@@ -23,7 +23,7 @@ import { Container, Col, Row } from 'react-bootstrap';
 import { ListChildComponentProps } from 'react-window';
 
 import { BigListInfinite } from '../list/BigListInfinite';
-import { CommentBox } from '../comment-box/comment-box';
+import { CommentBox } from './comment-box/comment-box';
 import { useStore } from 'react-redux';
 import { AppState, AppStore } from '@howto/hydro-store';
 
@@ -38,7 +38,7 @@ type EntityCount = number;
 
 type EntityData = UniPostsPost[];
 
-interface UniPostsListProps extends HTMLProps<HTMLDivElement> {
+interface UniPostsCommentsProps extends HTMLProps<HTMLDivElement> {
   queryStatus: QueryStatus;
   renderRow: (props: ListChildComponentProps) => JSX.Element | null;
   isItemLoaded: (index: number) => boolean;
@@ -60,7 +60,7 @@ interface UniPostsListProps extends HTMLProps<HTMLDivElement> {
 //
 // View component
 //
-const UniPostsCommentListView: React.FC<UniPostsListProps> = (props) => (
+const UniPostsCommentListView: React.FC<UniPostsCommentsProps> = (props) => (
   <div className={`container-fluid d-flex flex-column h-90`}>
     <div className={'row'}>
       <div className={'col'}>
@@ -95,7 +95,7 @@ const pageSize = 15;
 //
 // Controller component
 //
-export function UniPostsComments(props: Partial<UniPostsListProps>) {
+export function UniPostsComments(props: Partial<UniPostsCommentsProps>) {
   const store = useStore() as AppStore;
   const listRef = useRef<HTMLDivElement>();
 
@@ -172,12 +172,16 @@ export function UniPostsComments(props: Partial<UniPostsListProps>) {
     }
   }
 
+  async function onRowUpdateContent(id: number, content: string) {
+    await _updateOne({ id, body: { data: { content }}});
+  }
+
   function renderRow({ index, style }: ListChildComponentProps) {
     const item = entityData.current[index];
     if (!item) return null;
     return (
       <li style={style} className="list-group-item">
-        <CommentBox item={item} onClickMenuItem={onClickRowMenuItem}/>
+        <CommentBox item={item} onDeleteItem={onClickRowMenuItem} onUpdateItem={onRowUpdateContent}/>
       </li>
     );
   }

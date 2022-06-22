@@ -37,7 +37,7 @@ type EntityCount = number;
 
 type EntityData = UniPostsPost[];
 
-interface UniPostsListProps extends HTMLProps<HTMLDivElement> {
+interface UniPostsTopicsProps extends HTMLProps<HTMLDivElement> {
   queryStatus: QueryStatus;
   renderRow: (props: ListChildComponentProps) => JSX.Element | null;
   isItemLoaded: (index: number) => boolean;
@@ -59,7 +59,7 @@ interface UniPostsListProps extends HTMLProps<HTMLDivElement> {
 //
 // View component
 //
-const UniPostsTopicListView: React.FC<UniPostsListProps> = (props) => (
+const UniPostsTopicListView: React.FC<UniPostsTopicsProps> = (props) => (
   <div className={`container-fluid d-flex flex-column h-90`}>
     <div className={'row'}>
       <div className={'col'}>
@@ -92,7 +92,7 @@ const pageSize = 15;
 //
 // Controller component
 //
-export function UniPostsTopics(props: Partial<UniPostsListProps>) {
+export function UniPostsTopics(props: Partial<UniPostsTopicsProps>) {
   const store = useStore() as AppStore;
   const listRef = useRef<HTMLDivElement>();
 
