@@ -7,7 +7,7 @@ import { Col, Row } from 'react-bootstrap';
 // Types
 //
 
-interface CommentBoxProps extends HTMLProps<HTMLDivElement> {
+interface TopicBoxProps extends HTMLProps<HTMLDivElement> {
   item:  GetUniPostsByIdApiResponse['data'];
   onClickMenuItem: React.MouseEventHandler<HTMLElement>;
 }
@@ -19,19 +19,18 @@ interface CommentBoxProps extends HTMLProps<HTMLDivElement> {
 //
 // Controller component
 //
-export function CommentBox({
+export function TopicBox({
   item,
   onClickMenuItem,
   ...rest
-}: CommentBoxProps) {
+}: TopicBoxProps) {
 
   return (
     <div className="card" {...rest}>
       <div className="card-header">
         <Row>
           <Col sm={11}>
-            {item?.attributes?.user?.data?.attributes?.username}
-            <small>{' commented on '}{item?.attributes?.updatedAt}</small>
+            {item?.attributes?.user?.data?.attributes?.username || 'Anonymous'}
           </Col>
           <Col>
             <Dropdown>
@@ -46,12 +45,15 @@ export function CommentBox({
       </div>
       <div className="card-body">
         <blockquote className="blockquote">
-          <p>{item?.attributes?.content}</p>
+          <p>{item?.attributes?.title}</p>
           <footer className="blockquote-footer">{`${item?.id}`}</footer>
         </blockquote>
+      </div>
+      <div className="card-footer text-muted">
+        {' written at '}{item?.attributes?.updatedAt}
       </div>
     </div>
   );
 }
 
-export default CommentBox;
+export default TopicBox;

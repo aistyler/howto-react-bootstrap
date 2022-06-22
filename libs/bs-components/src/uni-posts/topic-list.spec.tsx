@@ -1,12 +1,12 @@
 import { render } from '@testing-library/react';
-import { UniPostsList } from './list';
+import { UniPostsTopics } from './topic-list';
 
 import { setupDefaultStore, setupDefaultServer } from '@howto/test-utils';
 
 const storeRef = setupDefaultStore();
 const server = setupDefaultServer();
 
-describe(`# ${UniPostsList.name}`, () => {
+describe(`# ${UniPostsTopics.name}`, () => {
   let store: typeof storeRef.store;
   let wrapper: typeof storeRef.wrapper;
 
@@ -15,7 +15,7 @@ describe(`# ${UniPostsList.name}`, () => {
   });
 
   it('should render successfully', () => {
-    const { baseElement } = render(<UniPostsList />, { wrapper });
+    const { baseElement } = render(<UniPostsTopics />, { wrapper });
     expect(baseElement).toBeTruthy();
   });
 });

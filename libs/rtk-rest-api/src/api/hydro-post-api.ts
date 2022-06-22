@@ -208,7 +208,9 @@ export type PutUniPostsByIdApiArg = {
   };
 };
 
-export type DeleteUniPostsByIdApiResponse = /** status 200 OK */ number;
+export type DeleteUniPostsByIdApiResponse = /** status 200 OK */ {
+  data?: UniPostsPost;
+};
 
 export type DeleteUniPostsByIdApiArg = {
   id: number;

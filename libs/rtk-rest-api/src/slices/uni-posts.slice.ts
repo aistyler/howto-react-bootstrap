@@ -2,12 +2,15 @@ import {
   createEntityAdapter,
   createSelector,
   createSlice,
+  Dispatch,
   EntityState,
   PayloadAction,
+  Update,
 } from '@reduxjs/toolkit';
 import type {
   GetUniPostsApiArg,
   GetUniPostsByIdApiResponse,
+  UniPostsPost,
 } from '../api/hydro-post-api';
 
 export type UniPostEntity = GetUniPostsByIdApiResponse['data'];
@@ -33,8 +36,11 @@ export const uniPostsSlice = createSlice({
   reducers: {
     add: entityAdapter.addOne,
     remove: entityAdapter.removeOne,
+    update: entityAdapter.updateOne,
+    upsert: entityAdapter.upsertOne,
     addMany: entityAdapter.addMany,
     removeAll: entityAdapter.removeAll,
+    upsertMany: entityAdapter.upsertMany,
     setMeta: (
       state,
       action: PayloadAction<
@@ -72,6 +78,14 @@ export const uniPostsActions = uniPostsSlice.actions;
 export const uniPostsAdapterSelector = () => {
   return entityAdapter.getSelectors<any>((state) => state[STORE_KEY_UNI_POSTS]);
 };
+
+export const uniPostsCacheAdd = (item: UniPostsPost, dispatch: Dispatch) => dispatch(uniPostsActions.add(item));
+export const uniPostsCacheAddMany = (items: UniPostsPost[], dispatch: Dispatch) => dispatch(uniPostsActions.addMany(items));
+export const uniPostsCacheRemove = (id: number, dispatch: Dispatch) => dispatch(uniPostsActions.remove(id));
+export const uniPostsCacheRemoveAll = (dispatch: Dispatch) => dispatch(uniPostsActions.removeAll());
+export const uniPostsCacheUpsert = (item: UniPostsPost, dispatch: Dispatch) => dispatch(uniPostsActions.upsert(item));
+export const uniPostsCacheUpsertMany = (items: UniPostsPost[], dispatch: Dispatch) => dispatch(uniPostsActions.upsertMany(items));
+export const uniPostsCacheUpdate = (update: Update<UniPostsPost>, dispatch: Dispatch) => dispatch(uniPostsActions.update(update));
 
 /**
  * Entity adapter store state
