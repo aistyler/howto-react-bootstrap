@@ -47,9 +47,11 @@ const staggeredBaseQueryWithBailOut: BaseQueryFn<
   }
 );
 
+export const STORE_KEY_HYDRO_API = 'hydroApi';
+
 // initialize an empty api service that we'll inject endpoints into later as needed
 export const baseApi = createApi({
-  reducerPath: 'hydroApi',
+  reducerPath: STORE_KEY_HYDRO_API,
   baseQuery: staggeredBaseQueryWithBailOut,
   // global configuration for the api
   // *N.B*

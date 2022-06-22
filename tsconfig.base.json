@@ -17,7 +17,9 @@
     "paths": {
       "@howto/bs-components": ["libs/bs-components/src/index.ts"],
       "@howto/bs-theme": ["libs/bs-theme/src/index.ts"],
-      "@howto/rtk-rest-api": ["libs/rtk-rest-api/src/index.ts"]
+      "@howto/hydro-store": ["libs/hydro-store/src/index.ts"],
+      "@howto/rtk-rest-api": ["libs/rtk-rest-api/src/index.ts"],
+      "@howto/test-utils": ["libs/test-utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

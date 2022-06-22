@@ -3,7 +3,7 @@ import {
   uniPostsAdapterSelector,
   uniPostsAdapterState,
   uniPostsSlice,
-  UNI_POSTS_SLICE_KEY as SLICE_KEY,
+  STORE_KEY_UNI_POSTS as SLICE_KEY,
 } from './uni-posts.slice';
 import {
   hydroPostApi as api,

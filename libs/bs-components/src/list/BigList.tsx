@@ -8,7 +8,7 @@ import React, {
 import { areEqual, FixedSizeList as List } from 'react-window';
 import type { ListChildComponentProps } from 'react-window';
 
-interface BigListProps extends ComponentProps<typeof List> {
+interface BigListProps extends ComponentProps<typeof List<any>> {
   memonized?: boolean;
 }
 

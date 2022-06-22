@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, {
   ComponentProps,
-  ComponentType,
   memo,
   useEffect,
   useRef,
 } from 'react';
 import { areEqual, FixedSizeList as List } from 'react-window';
-import type { ListChildComponentProps } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 import AutoSize from 'react-virtualized-auto-sizer';
 

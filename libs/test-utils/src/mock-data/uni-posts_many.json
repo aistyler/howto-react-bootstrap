@@ -1,0 +1,66 @@
+{
+  "data": [
+    {
+      "id": 15,
+      "attributes": {
+        "title": "test title updated",
+        "content": "test uni-post content",
+        "createdAt": "2022-06-12T12:29:47.639Z",
+        "updatedAt": "2022-06-12T12:29:47.722Z",
+        "kind": "topic",
+        "parent": {
+          "data": null
+        },
+        "user": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "username": "test001",
+              "email": "test001@local.host",
+              "provider": "local",
+              "confirmed": true,
+              "blocked": false,
+              "createdAt": "2022-06-09T16:52:55.109Z",
+              "updatedAt": "2022-06-09T16:52:55.109Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 18,
+      "attributes": {
+        "title": "title from rest test~",
+        "content": "content from rest test",
+        "createdAt": "2022-06-12T12:51:10.744Z",
+        "updatedAt": "2022-06-12T12:51:10.744Z",
+        "kind": "topic",
+        "parent": {
+          "data": null
+        },
+        "user": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "username": "test001",
+              "email": "test001@local.host",
+              "provider": "local",
+              "confirmed": true,
+              "blocked": false,
+              "createdAt": "2022-06-09T16:52:55.109Z",
+              "updatedAt": "2022-06-09T16:52:55.109Z"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "pageSize": 100,
+      "pageCount": 1,
+      "total": 2
+    }
+  }
+}

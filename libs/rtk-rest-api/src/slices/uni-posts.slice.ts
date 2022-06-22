@@ -12,7 +12,7 @@ import type {
 
 export type UniPostEntity = GetUniPostsByIdApiResponse['data'];
 
-export const UNI_POSTS_SLICE_KEY = 'uniPostsList';
+export const STORE_KEY_UNI_POSTS = 'uniPostsList';
 
 export interface UniPostsState extends EntityState<UniPostEntity> {
   pageSize?: number;
@@ -28,7 +28,7 @@ const entityAdapter = createEntityAdapter<UniPostEntity>({
 const initialState: UniPostsState = entityAdapter.getInitialState({});
 
 export const uniPostsSlice = createSlice({
-  name: UNI_POSTS_SLICE_KEY,
+  name: STORE_KEY_UNI_POSTS,
   initialState: initialState,
   reducers: {
     add: entityAdapter.addOne,
@@ -70,7 +70,7 @@ export const uniPostsActions = uniPostsSlice.actions;
  * @returns EntitySelectors
  */
 export const uniPostsAdapterSelector = () => {
-  return entityAdapter.getSelectors<any>((state) => state[UNI_POSTS_SLICE_KEY]);
+  return entityAdapter.getSelectors<any>((state) => state[STORE_KEY_UNI_POSTS]);
 };
 
 /**
@@ -82,7 +82,7 @@ export const uniPostsAdapterSelector = () => {
  * @returns
  */
 export const uniPostsAdapterState = (appState: any): UniPostsState =>
-  appState[UNI_POSTS_SLICE_KEY];
+  appState[STORE_KEY_UNI_POSTS];
 
 const { selectAll, selectEntities, selectIds } = entityAdapter.getSelectors();
 

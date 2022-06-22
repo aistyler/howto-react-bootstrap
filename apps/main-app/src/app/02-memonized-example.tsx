@@ -11,7 +11,7 @@ type ItemData = {
   items: Item[];
 };
 
-const Row: RenderRow<ItemData> = ({ data, index, style }) => {
+const renderRow: RenderRow<ItemData> = ({ data, index, style }) => {
   const { items } = data;
   const item = items[index];
   return (
@@ -57,7 +57,7 @@ export function MemonizedExample() {
         itemData={itemData}
         memonized
       >
-        {Row}
+        {renderRow}
       </BigList>
     </>
   );
