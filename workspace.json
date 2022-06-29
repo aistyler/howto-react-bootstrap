@@ -7,6 +7,7 @@
     "bs-theme": "libs/bs-theme",
     "hydro-store": "libs/hydro-store",
     "main-app": "apps/main-app",
+    "react-utils": "libs/react-utils",
     "rtk-rest-api": "libs/rtk-rest-api",
     "test-utils": "libs/test-utils"
   }

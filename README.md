@@ -21,6 +21,7 @@ nx generate @nrwl/react:library bs-theme --e2eTestRunner=none --style=css --no-i
 nx generate @nrwl/react:library bs-components --e2eTestRunner=none --style=css --no-interactive --dry-run
 nx generate @nrwl/react:library hydro-store --e2eTestRunner=none --style=css --no-interactive --dry-run
 nx generate @nrwl/react:library rtk-rest-api --e2eTestRunner=none --style=css --no-interactive --dry-run
+nx generate @nrwl/react:library react-utils --e2eTestRunner=none --style=css --no-interactive --dry-run
 
 # install dependencies
 yarn add bootstrap react-bootstrap

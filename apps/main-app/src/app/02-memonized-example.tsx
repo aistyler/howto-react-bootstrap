@@ -11,7 +11,7 @@ type ItemData = {
   items: Item[];
 };
 
-const renderRow: RenderRow<ItemData> = ({ data, index, style }) => {
+const renderRow: RenderRow<any> = ({ data, index, style }) => {
   const { items } = data;
   const item = items[index];
   return (

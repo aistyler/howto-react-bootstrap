@@ -3,7 +3,6 @@ import React, {
   ComponentProps,
   ComponentType,
   ForwardedRef,
-  LegacyRef,
   memo,
   useCallback,
   useEffect,
@@ -111,7 +110,7 @@ const _BigListScroller: React.ForwardRefRenderFunction<
         } else {
           ctrl.scrollTo(scrollTop, 0);
         }
-        console.log('>>> BigListScroller: scrollTop:', scrollTop);
+        //console.log('>>> BigListScroller: scrollTop:', scrollTop);
       } else console.log('*** BigListScroller: ref is null');
     }, throttleTime);
 

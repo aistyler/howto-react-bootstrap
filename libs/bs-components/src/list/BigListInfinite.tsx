@@ -59,18 +59,18 @@ const _BigListInfinite: React.ForwardRefRenderFunction<
         >
           {({ onItemsRendered, ref: setRef }) => (
             <List
+              {...props}
               ref={(node) => {
                 if (node) {
                   setRef(node);
                   if (typeof ref === 'function') ref(node);
                   else if (ref) ref.current = node;
-                  console.log('>>>>>BigListInfinite: setref', typeof ref);
+                  //console.log('>>>>>BigListInfinite: setref', typeof ref);
                 }
               }}
               onItemsRendered={onItemsRendered}
               width={width}
               height={height}
-              {...props}
             >
               {rowMemonized.current}
             </List>
