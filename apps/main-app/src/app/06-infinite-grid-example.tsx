@@ -1,6 +1,6 @@
 import React from 'react';
-import { BigListInfinite } from '@howto/bs-components';
-import { ListChildComponentProps, ListOnScrollProps } from 'react-window';
+import { BigGridInfinite } from '@howto/bs-components';
+import { GridChildComponentProps, GridOnScrollProps, ListChildComponentProps, ListOnScrollProps } from 'react-window';
 import throttle from 'lodash/throttle';
 import styles from './app.module.css';
 
@@ -9,8 +9,8 @@ type Item = {
   name: string;
 };
 
-let _totalCount = 300;
-let _fetchCount = 0;
+const _totalCount = 300;
+const _fetchCount = 0;
 function fetchTotalCount(): Promise<number> {
   //if (_fetchCount++ % 10) _totalCount += 5;
 
@@ -48,43 +48,69 @@ const documentScrollPositionKey = {
   x: 'scrollLeft' as const,
 };
 
+const documentScrollHeightKey = {
+  x: 'scrollWidth' as const,
+  y: 'scrollHeight' as const,
+};
+
+const documentClientHeightKey = {
+  x: 'clientWidth' as const,
+  y: 'clientHeight' as const,
+}
+
 const getScrollPosition = (axis: 'x' | 'y') =>
   window[windowScrollPositionKey[axis]] ||
   document.documentElement[documentScrollPositionKey[axis]] ||
   document.body[documentScrollPositionKey[axis]] ||
   0;
 
-const pageSize = 30;
-const rowItemHeight = 35;
-const throttleTime = 10;
+const getScrollSize = (axis: 'x' | 'y') =>
+document.documentElement[documentScrollHeightKey[axis]] ||
+0;
 
-export function InfiniteAutoSizeExample() {
+const getClientSize = (axis: 'x' | 'y') =>
+document.documentElement[documentClientHeightKey[axis]] ||
+0;
+
+const pageSize = 30;
+const rowHeight = 35;
+const throttleTime = 100;
+const columnCount = 2;
+const scrollThreshold = 0.9;
+
+export function InfiniteGridExample() {
   const [loading, setLoading] = React.useState(false);
   const [totalCount, setTotalCount] = React.useState<number>();
-  const [itemCount, setItemCount] = React.useState(0);
-
+  const [rowCount, setRowCount] = React.useState(0);
+  const [ctrlHeight, setCtrlHeight] = React.useState(0);
   const items = React.useRef([] as Item[]);
   const listRef = React.useRef<any>();
   const outerRef = React.useRef<HTMLDivElement>();
 
+  const itemsLen = items.current.length;
+
   React.useEffect(() => {
-    // start total count updater
     function _fetch() {
       const countReq = fetchTotalCount();
       countReq.then((res) => setTotalCount(res));
     }
     _fetch();
+    // start total count updater
     const htimer = setInterval(_fetch, 5000);
 
-    // scroll listener
     const handleWindowScroll = throttle(() => {
-      const ctrl = listRef.current;
-      if (ctrl) {
-        const { offsetTop = 0 } = outerRef.current || {};
-        const scrollTop = getScrollPosition('y') - offsetTop;
-        //ctrl.scrollTo(scrollTop, 0);
-        //console.log('>>> BigListScroller: scrollTop:', scrollTop);
-      };
+      const totalHeight = Math.ceil((items.current.length/columnCount) * rowHeight + 10);
+      const scrollTop = getScrollPosition('y');
+      const clientHeight = getClientSize('y');
+      const scrollBottom = scrollTop + clientHeight;
+
+      if (totalHeight <= clientHeight ) return;
+
+      if (scrollBottom / totalHeight > scrollThreshold) {
+        console.log('>>> increase height:', scrollBottom / totalHeight);
+        setCtrlHeight(Math.max(ctrlHeight, totalHeight));
+      }
+      //console.log('top:', scrollTop, ', bottom:', scrollBottom, ', scroll pos:', scrollBottom / totalHeight);
     }, throttleTime);
 
     window.addEventListener('scroll', handleWindowScroll);
@@ -96,30 +122,20 @@ export function InfiniteAutoSizeExample() {
     }
   }, []);
 
-  const onScroll = React.useCallback(
-    ({ scrollOffset, scrollUpdateWasRequested }: ListOnScrollProps) => {
-      if (!scrollUpdateWasRequested) return;
-      const top = getScrollPosition('y');
-      const { offsetTop = 0 } = outerRef.current || {};
-
-      scrollOffset += Math.min(top, offsetTop);
-      const scrollTop = top + offsetTop;
-
-      //if ( scrollOffset !== top) window.scrollTo(0, scrollOffset);
-      console.log('>>> BigListScroller:onScroll() scrollTop:', scrollTop);
-    },
-    []
-  );
-
-  const itemsLen = items.current.length;
   React.useEffect(() => {
-    if (totalCount !== undefined)
-      setItemCount(Math.min(itemsLen + pageSize, totalCount));
-  }, [totalCount, itemsLen]);
+    if (totalCount !== undefined) {
+      const _maxRowCount = Math.ceil(totalCount / columnCount);
+      const _rowCount = Math.ceil((items.current.length+1) / columnCount);
+      setRowCount(Math.min(_rowCount, _maxRowCount));
 
-  const listHeight = itemCount * rowItemHeight + 10;
+      const _maxRowHeight = _maxRowCount * rowHeight;
+      const _rowHeight = _rowCount * rowHeight;
+      const _thresholdHeight = Math.min(_rowHeight, _maxRowHeight) * scrollThreshold;
+      setCtrlHeight((_rowHeight >= _maxRowHeight) ? _maxRowHeight : _thresholdHeight);
+    }
+  }, [totalCount, items.current.length]);
 
-  console.log('>>> item count:', itemCount, ', is loading:', loading);
+  console.log('>>> row count:', rowCount, ', ctrl height:', ctrlHeight, ', is loading:', loading);
 
   return (
     <div className={`container`}>
@@ -132,22 +148,21 @@ export function InfiniteAutoSizeExample() {
         </button>
       </div>
 
-      <div className={'row'} style={{ height: listHeight, overflow: 'hidden' }}>
+      <div className={'row'} style={{ height: ctrlHeight, overflow: 'hidden' }}>
         <div className={'col'}>
-          <BigListInfinite
+          <BigGridInfinite
             className={styles['list']}
             ref={listRef}
-            itemSize={rowItemHeight}
+            rowHeight={rowHeight}
             isItemLoaded={isItemLoaded}
             loadMoreItems={loadMoreItems}
-            itemCount={itemCount}
-            onScroll={onScroll}
-            outerRef={outerRef}
+            columnCount={columnCount}
+            rowCount={rowCount}
             threshold={pageSize}
             memonized
           >
-            {renderRow}
-          </BigListInfinite>
+            {renderCell}
+          </BigGridInfinite>
         </div>
       </div>
     </div>
@@ -172,8 +187,10 @@ export function InfiniteAutoSizeExample() {
     return promise as any as Promise<void>;
   }
 
-  function renderRow({ index, style }: ListChildComponentProps) {
+  function renderCell({ rowIndex, columnIndex, style }: GridChildComponentProps) {
+    const index = rowIndex * columnCount + columnIndex;
     if (index >= items.current.length) {
+      console.log('*** OVERFLOWED INDEX:', index, items.current.length);
       return null;
     }
     const item = items.current[index];
@@ -190,4 +207,4 @@ export function InfiniteAutoSizeExample() {
   }
 }
 
-export default InfiniteAutoSizeExample;
+export default InfiniteGridExample;

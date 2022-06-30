@@ -8,8 +8,8 @@ type Item = {
   name: string;
 };
 
-let _totalCount = 300;
-let _fetchCount = 0;
+const _totalCount = 121;
+const _fetchCount = 0;
 function fetchTotalCount(): Promise<number> {
   //if (_fetchCount++ % 10) _totalCount += 5;
 

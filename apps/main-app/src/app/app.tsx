@@ -3,14 +3,14 @@ import React from 'react';
 import { Example } from './00-example';
 import { SimpleExample } from './01-simple-example';
 import { InfiniteAutoSizeExample } from './04-infinite-auto-size-example';
-import { InfiniteAutoSizeExample as InfiniteAutoSizeExample1 } from './04-1-infinite-auto-size-example';
+import { InfiniteGridExample } from './06-infinite-grid-example';
 import { InfiniteScrollerExample } from './05-infinite-scroller-example';
 import { UniPostsTopicsExample } from './10-uni-posts-topics-example';
 import { UniPostsCommentsExample } from './11-uni-posts-comments-example';
 
-let _page = 4.1;
+let _page = 6;
 
-const pages = [0, 1, 4, 4.1, 5, 10, 11];
+const pages = [0, 1, 4, 5, 6, 10, 11];
 
 export function App() {
   const [page, setPage] = React.useState(_page);
@@ -32,8 +32,8 @@ export function App() {
           <Example />
         ) : page === 4 ? (
           <InfiniteAutoSizeExample />
-        ) : page === 4.1 ? (
-          <InfiniteAutoSizeExample1 />
+        ) : page === 6 ? (
+          <InfiniteGridExample />
         ) : page === 5 ? (
           <InfiniteScrollerExample />
         ) : (

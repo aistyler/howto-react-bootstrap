@@ -5,13 +5,13 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
-import { areEqual, FixedSizeList as List, ListOnScrollProps } from 'react-window';
+import { areEqual, FixedSizeGrid as Grid, GridOnItemsRenderedProps, ListOnItemsRenderedProps, ListOnScrollProps } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 import AutoSize from 'react-virtualized-auto-sizer';
 import throttle from 'lodash/throttle';
 
-interface BigListInfiniteProps
-  extends Omit<ComponentProps<typeof List>, 'width' | 'height'> {
+interface BigGridInfiniteProps
+  extends Omit<ComponentProps<typeof Grid>, 'width' | 'height' | 'columnWidth'> {
   memonized?: boolean;
   isItemLoaded: (index: number) => boolean;
   loadMoreItems: (
@@ -26,9 +26,9 @@ interface BigListInfiniteProps
 
 const memonizedRow = (row: any) => memo((props) => row(props), areEqual);
 
-const _BigListInfinite: React.ForwardRefRenderFunction<
+const _BigGridInfinite: React.ForwardRefRenderFunction<
   any,
-  BigListInfiniteProps
+  BigGridInfiniteProps
 > = (
   {
     children,
@@ -42,24 +42,23 @@ const _BigListInfinite: React.ForwardRefRenderFunction<
   _ref
 ) => {
   const rowMemonized = useRef(children);
-
   // memonize
   useEffect(() => {
     if (memonized) rowMemonized.current = memonizedRow(children);
   }, [memonized, children]);
-
+  const _columnCount = props.columnCount;
   return (
     <AutoSize>
       {({ height, width }) => (
         <InfiniteLoader
           isItemLoaded={isItemLoaded}
-          itemCount={props.itemCount}
+          itemCount={props.rowCount * props.columnCount}
           loadMoreItems={loadMoreItems}
           threshold={threshold}
           minimumBatchSize={minimumBatchSize}
         >
           {({ onItemsRendered, ref: setRef }) => (
-            <List
+            <Grid
               {...props}
               ref={(node) => {
                 if (node) {
@@ -69,13 +68,19 @@ const _BigListInfinite: React.ForwardRefRenderFunction<
                   //console.log('>>>>>BigListInfinite: setref', typeof ref);
                 }
               }}
-              onItemsRendered={onItemsRendered}
+              columnWidth={width / props.columnCount}
+              onItemsRendered={(p) => onItemsRendered({
+                overscanStartIndex: p.overscanRowStartIndex * _columnCount + p.overscanColumnStartIndex,
+                overscanStopIndex: p.overscanRowStopIndex * _columnCount + p.overscanColumnStopIndex,
+                visibleStartIndex: p.visibleRowStartIndex * _columnCount + p.visibleColumnStartIndex,
+                visibleStopIndex: p.visibleRowStopIndex * _columnCount + p.visibleColumnStopIndex,
+              })}
               width={width}
               height={height}
               style={{ overflow: 'hidden' }}
             >
               {rowMemonized.current}
-            </List>
+            </Grid>
           )}
         </InfiniteLoader>
       )}
@@ -83,4 +88,4 @@ const _BigListInfinite: React.ForwardRefRenderFunction<
   );
 };
 
-export const BigListInfinite = React.forwardRef(_BigListInfinite);
+export const BigGridInfinite = React.forwardRef(_BigGridInfinite);
