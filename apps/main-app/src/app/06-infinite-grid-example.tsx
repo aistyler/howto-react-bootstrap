@@ -80,9 +80,10 @@ const scrollThreshold = 0.9;
 
 export function InfiniteGridExample() {
   const [loading, setLoading] = React.useState(false);
-  const [totalCount, setTotalCount] = React.useState<number>();
+  const [totalCount, setTotalCount] = React.useState<number>(0);
   const [rowCount, setRowCount] = React.useState(0);
-  const [ctrlHeight, setCtrlHeight] = React.useState(0);
+
+  const ctrlHeight = React.useRef(0);
   const items = React.useRef([] as Item[]);
   const listRef = React.useRef<any>();
   const outerRef = React.useRef<HTMLDivElement>();
@@ -97,18 +98,42 @@ export function InfiniteGridExample() {
     _fetch();
     // start total count updater
     const htimer = setInterval(_fetch, 5000);
+    return () => {
+      clearInterval(htimer);
+    }
+  }, []);
 
+  //
+  // TODO: document element의 scroll을 이용한 infinite-list
+  // - current issue:
+  //   . when updating ctrlHeight, it's not updated because the ctrlHeight is a 'ref'
+  //
+
+  const _setCtrlHeight = (ratio: number) => {
+    const _maxRowCount = Math.ceil(totalCount / columnCount);
+    const _rowCount = Math.ceil((items.current.length+1) / columnCount);
+
+    const _maxRowHeight = _maxRowCount * rowHeight;
+    const _rowHeight = _rowCount * rowHeight;
+    const _thresholdHeight = Math.min(_rowHeight, _maxRowHeight) * ratio;
+    ctrlHeight.current = (_rowHeight >= _maxRowHeight) ? _maxRowHeight : _thresholdHeight;
+  }
+
+  React.useEffect(() => {
     const handleWindowScroll = throttle(() => {
-      const totalHeight = Math.ceil((items.current.length/columnCount) * rowHeight + 10);
+      const totalHeight = ctrlHeight.current; //Math.ceil((items.current.length/columnCount) * rowHeight + 10);
       const scrollTop = getScrollPosition('y');
       const clientHeight = getClientSize('y');
       const scrollBottom = scrollTop + clientHeight;
 
-      if (totalHeight <= clientHeight ) return;
+      if (totalHeight <= clientHeight ) {
+        console.log('>>> ', totalHeight, clientHeight);
+        return;
+      }
 
       if (scrollBottom / totalHeight > scrollThreshold) {
         console.log('>>> increase height:', scrollBottom / totalHeight);
-        setCtrlHeight(Math.max(ctrlHeight, totalHeight));
+        _setCtrlHeight(1.1);
       }
       //console.log('top:', scrollTop, ', bottom:', scrollBottom, ', scroll pos:', scrollBottom / totalHeight);
     }, throttleTime);
@@ -116,26 +141,21 @@ export function InfiniteGridExample() {
     window.addEventListener('scroll', handleWindowScroll);
 
     return () => {
-      clearInterval(htimer);
       handleWindowScroll.cancel();
       window.removeEventListener('scroll', handleWindowScroll);
     }
-  }, []);
+  }, [totalCount]);
 
   React.useEffect(() => {
     if (totalCount !== undefined) {
       const _maxRowCount = Math.ceil(totalCount / columnCount);
       const _rowCount = Math.ceil((items.current.length+1) / columnCount);
       setRowCount(Math.min(_rowCount, _maxRowCount));
-
-      const _maxRowHeight = _maxRowCount * rowHeight;
-      const _rowHeight = _rowCount * rowHeight;
-      const _thresholdHeight = Math.min(_rowHeight, _maxRowHeight) * scrollThreshold;
-      setCtrlHeight((_rowHeight >= _maxRowHeight) ? _maxRowHeight : _thresholdHeight);
+      _setCtrlHeight(0.7);
     }
   }, [totalCount, items.current.length]);
 
-  console.log('>>> row count:', rowCount, ', ctrl height:', ctrlHeight, ', is loading:', loading);
+  console.log('>>> row count:', rowCount, ', ctrl height:', ctrlHeight.current, ', is loading:', loading);
 
   return (
     <div className={`container`}>
@@ -148,7 +168,7 @@ export function InfiniteGridExample() {
         </button>
       </div>
 
-      <div className={'row'} style={{ height: ctrlHeight, overflow: 'hidden' }}>
+      <div className={'row'} style={{ height: ctrlHeight.current, overflow: 'hidden' }}>
         <div className={'col'}>
           <BigGridInfinite
             className={styles['list']}
